@@ -1,0 +1,81 @@
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+
+#set($D = '$')
+     
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+</head>
+<body>
+<div class="crud-portlet">
+
+<!-- Message: BEGIN -->
+<div><html:messages id="msg" message="true"><bean:write name="msg" ignore="true"/></html:messages><html:errors/></div>
+<!-- Message: END -->
+
+<!-- Edit Form: BEGIN -->
+    <s:form>
+        <html:hidden property="crudMode"/>
+        <div class="form-table">
+		<table>
+            <caption><bean:message key="labels.crud_title_details"/></caption>
+            <tbody>
+
+#*
+<!-- Primary: BEGIN -->
+<c:if test="${D}{crudMode==2}">
+                <tr>
+                    <th>id</th>
+                    <td>${D}{f:h(id)}<html:hidden property="id"/></td>
+                </tr>
+</c:if>
+<!-- Primary: END -->
+                <tr>
+                    <th>value</th>
+                    <td><html:text property="value"/></td>
+                </tr>
+*#
+
+	#foreach( $column in ${table.getColumnList()} )
+		#if(${column.primaryKey})
+<c:if test="${D}{crudMode==2}">
+                <tr>
+                    <th>${column.name}</th>
+                    <td>${D}{f:h(${column.propertyName})}<html:hidden property="${column.propertyName}"/></td>
+                </tr>
+</c:if>
+		#else
+                <tr>
+                    <th>${column.name}</th>
+                    <td><html:text property="${column.propertyName}"/></td>
+                </tr>
+		#end
+	#end
+     
+
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+        <c:if test="${D}{crudMode == 1}">
+            <input type="submit" name="confirmfromcreate" value="<bean:message key="labels.crud_button_create"/>"/>
+            <input type="submit" name="back" value="<bean:message key="labels.crud_button_back"/>"/>
+        </c:if>
+        <c:if test="${D}{crudMode == 2}">
+            <input type="submit" name="confirmfromupdate" value="<bean:message key="labels.crud_button_confirm"/>"/>
+            <input type="submit" name="back" value="<bean:message key="labels.crud_button_back"/>"/>
+        </c:if>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+		</div>
+    </s:form>
+<!-- Edit Form: BEGIN -->
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+package ${crudContext.baseFormPkg};
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.seasar.struts.annotation.*;
+
+public abstract class Bs${table.className}Form {
+    @IntegerType
+    public String pageNumber;
+
+    public Map<String, String> searchParams = new HashMap<String, String>();
+
+    @IntegerType
+    public int crudMode;
+
+    public String getCurrentPageNumber() {
+        return pageNumber;
+    }
+
+    #*
+
+    @Required(target = "confirmfromupdate,update,delete")
+    @LongType
+    public String id;
+
+    @Maxbytelength(maxbytelength = 100)
+    public String value;
+
+    *#
+
+    
+    #foreach( $column in ${table.getColumnList()} )
+    #if(${column.required})@Required(target = "confirmfromupdate,update,delete")#end
+    #if(${column.javaType} == "Long")@LongType#end
+    #if(${column.javaType} == "Integer")@IntegerType#end
+    #if(${column.javaType} == "Short")@ShortType#end
+    #if(${column.javaType} == "Byte")@ByteType#end
+    #if(${column.javaType} == "Float")@FloatType#end
+    #if(${column.javaType} == "Double")@DoubleType#end
+    #if(${column.javaType} == "java.sql.Timestamp")@DateType#end
+    public String ${column.propertyName};
+    #end
+       
+
+    public void initialize() {
+        
+        #foreach( $column in ${table.getColumnList()} )
+        ${column.propertyName} = null;
+        #end
+           
+    }
+
+}

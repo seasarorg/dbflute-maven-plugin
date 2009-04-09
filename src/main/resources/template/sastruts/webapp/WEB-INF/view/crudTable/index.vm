@@ -1,0 +1,144 @@
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+
+#set($D = '$')
+     
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+</head>
+<body>
+<div class="crud-portlet">
+
+<!-- Message: BEGIN -->
+<div><html:messages id="msg" message="true"><bean:write name="msg" ignore="true"/></html:messages><html:errors/></div>
+<!-- Message: END -->
+
+<!-- Search: BEGIN -->
+<div class="form-table">
+<s:form>
+<table>
+	<tbody>
+		<tr>
+			<td>
+				<table><tbody>
+#*
+					<tr>
+						<th>ID:</th>
+						<td><html:text property="searchParams.id"></html:text></td>
+					</tr>
+*#
+
+	#foreach( $column in ${table.getColumnList()} )
+		#if(${column.primaryKey})
+					<tr>
+						<th>${column.name}:</th>
+						<td><html:text property="searchParams.${column.propertyName}"></html:text></td>
+					</tr>
+		#end
+	#end
+     
+
+				</tbody></table>
+			</td>
+			<td>
+				<input type="submit" name="search" value="<bean:message key="labels.crud_button_search"/>"/>
+				<input type="submit" name="reset" value="<bean:message key="labels.crud_button_reset"/>"/>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</s:form>
+</div>
+<!-- Search: END -->
+
+<!-- List: BEGIN -->
+<div class="list-table">
+<div>
+<s:link href="createpage"><bean:message key="labels.crud_link_create_new"/></s:link>
+</div>
+<table border="1">
+	<thead>
+		<tr>
+#*
+			<th style="text-align: center;">id</th>
+			<th style="text-align: center;">value</th>
+*#
+
+	#foreach( $column in ${table.getColumnList()} )
+			<th style="text-align: center;">${column.name}</th>
+	#end
+     
+			<th style="text-align: center;">&nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<c:forEach var="data" varStatus="s" items="${D}{${table.propertyName}Items}">
+		<tr class="${D}{s.index % 2 == 0 ? 'row1' : 'row2'}">
+
+#*
+			<td><s:link href="confirmpage/4/${D}{f:u(data.id)}">${D}{f:h(data.id)}</s:link></td>
+			<td>${D}{f:h(data.value)}</td>
+*#
+
+	#foreach( $column in ${table.getColumnList()} )
+		#if(${column.primaryKey})
+			<td><s:link href="confirmpage/4#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end">${D}{f:h(data.${column.propertyName})}</s:link></td>
+		#else
+			<td>${D}{f:h(data.${column.propertyName})}</td>
+		#end
+	#end
+     
+
+			<td align="center">
+#*
+				<s:link href="editpage/2/${D}{f:u(data.id)}"><bean:message key="labels.crud_link_edit"/></s:link>
+				<s:link href="deletepage/3/${D}{f:u(data.id)}"><bean:message key="labels.crud_link_delete"/></s:link>
+*#
+
+				<s:link href="editpage/2#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end"><bean:message key="labels.crud_link_edit"/></s:link>
+				<s:link href="deletepage/3#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end"><bean:message key="labels.crud_link_delete"/></s:link>
+     
+			</td>
+		</tr>
+		</c:forEach>
+	</tbody>
+</table>
+<!-- Page Navigation: BEGIN -->
+<div>
+	<span>
+		<c:if test="${D}{${table.propertyName}Pager.existPrePage}">
+		<s:link href="list/${D}{${table.propertyName}Pager.currentPageNumber - 1}"><bean:message key="labels.crud_link_prev_page"/></s:link>
+		</c:if>
+	</span>
+	<span>
+		<c:forEach var="p" varStatus="s" items="${D}{${table.propertyName}Pager.pageNumberList}">
+		<span>
+			<c:if test="${D}{p == ${table.propertyName}Pager.currentPageNumber}">
+			${p}
+			</c:if>
+			<c:if test="${D}{p != ${table.propertyName}Pager.currentPageNumber}">
+			<s:link href="list/${p}">${p}</s:link>
+			</c:if>
+		</span>
+		</c:forEach>
+	</span>
+	<span>
+		<c:if test="${D}{${table.propertyName}Pager.existNextPage}">
+		<s:link href="list/${D}{${table.propertyName}Pager.currentPageNumber + 1}"><bean:message key="labels.crud_link_next_page"/></s:link>
+		</c:if>
+	</span>
+</div>
+<div>
+	<span>
+		${D}{${table.propertyName}Pager.currentPageNumber}/${D}{${table.propertyName}Pager.allPageCount} (${D}{${table.propertyName}Pager.allRecordCount})
+	</span>
+</div>
+<!-- Page Navigation: END -->
+</div>
+<!-- List: END -->
+
+</div>
+
+</body>
+</html>

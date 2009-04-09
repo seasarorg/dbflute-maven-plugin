@@ -1,0 +1,28 @@
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+
+#set($D = '$')
+     
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+</head>
+<body>
+<div class="crud-portlet">
+
+<h3>DB Access</h3>
+<ul>
+#*
+	<li><s:link href="${table.propertyName}/index">${table.propertyName}</s:link></li>
+*#
+
+    #foreach( $table in ${database.getTableList()} )
+	<li><s:link href="${table.propertyName}/index">${table.propertyName}</s:link></li>
+	#end
+     
+</ul>
+
+</div>
+
+</body>
+</html>

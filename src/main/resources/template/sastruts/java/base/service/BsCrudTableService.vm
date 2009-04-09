@@ -1,0 +1,136 @@
+package ${crudContext.baseServicePkg};
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import ${crudContext.basePkg}.CommonConstants;
+import ${crudContext.basePkg}.CrudMessageException;
+import ${crudContext.dbPkg}.cbean.${table.className}CB;
+import ${crudContext.dbPkg}.exbhv.${table.className}Bhv;
+import ${crudContext.dbPkg}.exentity.${table.className};
+import ${crudContext.pagerPkg}.${table.className}Pager;
+
+import org.seasar.dbflute.cbean.PagingResultBean;
+import org.seasar.framework.beans.util.Beans;
+
+public abstract class Bs${table.className}Service {
+
+    @Resource
+    protected ${table.className}Bhv ${table.propertyName}Bhv;
+
+    public Bs${table.className}Service() {
+        super();
+    }
+
+    public List<${table.className}> get${table.className}List(${table.className}Pager ${table.propertyName}Pager) {
+
+        ${table.className}CB cb = new ${table.className}CB();
+
+        cb.fetchFirst(${table.propertyName}Pager.getPageSize());
+        cb.fetchPage(${table.propertyName}Pager.getCurrentPageNumber());
+
+        setupListCondition(cb, ${table.propertyName}Pager);
+
+        PagingResultBean<${table.className}> ${table.propertyName}List = ${table.propertyName}Bhv.selectPage(cb);
+
+        // update pager
+        Beans.copy(${table.propertyName}List, ${table.propertyName}Pager).includes(
+                CommonConstants.PAGER_CONVERSION_RULE).execute();
+        ${table.propertyName}List.setPageRangeSize(5);
+        ${table.propertyName}Pager.setPageNumberList(${table.propertyName}List.pageRange()
+                .createPageNumberList());
+
+        return ${table.propertyName}List;
+    }
+
+    public ${table.className} get${table.className}(Map<String, String> keys) {
+        ${table.className}CB cb = new ${table.className}CB();
+
+        #*
+        cb.query().setId_Equal(Long.parseLong(keys.get("id")));
+        *#
+
+        
+        #foreach( $column in ${table.getColumnList()} )
+        #if(${column.primaryKey})
+        #if(${column.javaType} == "Long")
+        cb.query().set${column.methodName}_Equal(Long.parseLong(keys.get("${column.propertyName}"))); 
+        #end
+        #if(${column.javaType} == "Integer")
+        cb.query().set${column.methodName}_Equal(Integer.parseInt(keys.get("${column.propertyName}"))); 
+        #end
+        #if(${column.javaType} == "String")
+        cb.query().set${column.methodName}_Equal(keys.get("${column.propertyName}")); 
+        #end
+        #end
+        #end
+        // TODO Long, Integer, String supported only.
+           
+
+        setupEntityCondition(cb, keys);
+
+        ${table.className} ${table.propertyName} = ${table.propertyName}Bhv.selectEntity(cb);
+        if (${table.propertyName} == null) {
+            // TODO exception?
+            return null;
+        }
+
+        return ${table.propertyName};
+    }
+
+    public void store(${table.className} ${table.propertyName}) throws CrudMessageException {
+        setupStoreCondition(${table.propertyName});
+
+        ${table.propertyName}Bhv.insertOrUpdate(${table.propertyName});
+
+    }
+
+    public void delete(${table.className} ${table.propertyName}) throws CrudMessageException {
+        setupDeleteCondition(${table.propertyName});
+
+        ${table.propertyName}Bhv.delete(${table.propertyName});
+
+    }
+
+    protected void setupListCondition(${table.className}CB cb,
+            ${table.className}Pager ${table.propertyName}Pager) {
+        #*
+        if (${table.propertyName}Pager.id != null) {
+            cb.query().setId_Equal(Long.parseLong(${table.propertyName}Pager.id));
+        }
+        *#
+
+        
+        #foreach( $column in ${table.getColumnList()} )
+        #if(${column.primaryKey})
+        #if(${column.javaType} == "Long")
+        if (${table.propertyName}Pager.${column.propertyName} != null) {
+            cb.query().set${column.methodName}_Equal(Long.parseLong(${table.propertyName}Pager.${column.propertyName}));
+        }
+        #end
+        #if(${column.javaType} == "Integer")
+        if (${table.propertyName}Pager.${column.propertyName} != null) {
+            cb.query().set${column.methodName}_Equal(Integer.parseInt(${table.propertyName}Pager.${column.propertyName}));
+        }
+        #end
+        #if(${column.javaType} == "String")
+        if (${table.propertyName}Pager.${column.propertyName} != null) {
+            cb.query().set${column.methodName}_Equal(${table.propertyName}Pager.${column.propertyName});
+        }
+        #end
+        #end
+        #end
+        // TODO Long, Integer, String supported only.
+           }
+
+    protected void setupEntityCondition(${table.className}CB cb, Map<String, String> keys) {
+    }
+
+    protected void setupStoreCondition(${table.className} ${table.propertyName}) {
+    }
+
+    protected void setupDeleteCondition(${table.className} ${table.propertyName}) {
+    }
+}

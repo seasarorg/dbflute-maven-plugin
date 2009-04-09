@@ -1,0 +1,47 @@
+package ${crudContext.servicePkg};
+
+import java.io.Serializable;
+import java.util.Map;
+
+import ${crudContext.baseServicePkg}.Bs${table.className}Service;
+import ${crudContext.dbPkg}.cbean.${table.className}CB;
+import ${crudContext.dbPkg}.exentity.${table.className};
+import ${crudContext.pagerPkg}.${table.className}Pager;
+
+public class ${table.className}Service extends Bs${table.className}Service implements
+        Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    protected void setupListCondition(${table.className}CB cb,
+            ${table.className}Pager ${table.propertyName}Pager) {
+        super.setupListCondition(cb, ${table.propertyName}Pager);
+
+        // setup condition
+
+        // search
+
+    }
+
+    protected void setupEntityCondition(${table.className}CB cb, Map<String, String> keys) {
+        super.setupEntityCondition(cb, keys);
+
+        // setup condition
+
+    }
+
+    protected void setupStoreCondition(${table.className} ${table.propertyName}) {
+        super.setupStoreCondition(${table.propertyName});
+
+        // setup condition
+
+    }
+
+    protected void setupDeleteCondition(${table.className} ${table.propertyName}) {
+        super.setupDeleteCondition(${table.propertyName});
+
+        // setup condition
+
+    }
+
+}

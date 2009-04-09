@@ -1,0 +1,29 @@
+package ${crudContext.basePkg}.creator;
+
+import org.seasar.framework.container.ComponentCustomizer;
+import org.seasar.framework.container.assembler.AutoBindingDefFactory;
+import org.seasar.framework.container.creator.ComponentCreatorImpl;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
+
+/**
+ * @author shinsuke
+ */
+public class PagerCreator extends ComponentCreatorImpl {
+    public static final String SUFFIX = "Pager";
+
+    public PagerCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setNameSuffix(SUFFIX);
+        setInstanceDef(InstanceDefFactory.SESSION);
+        setAutoBindingDef(AutoBindingDefFactory.NONE);
+    }
+
+    public ComponentCustomizer getPagerCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setPagerCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
+    }
+}

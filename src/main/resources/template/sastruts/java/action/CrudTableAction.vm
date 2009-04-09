@@ -1,0 +1,9 @@
+package ${crudContext.actionPkg};
+
+import ${crudContext.baseActionPkg}.Bs${table.className}Action;
+
+public class ${table.className}Action extends Bs${table.className}Action {
+
+    private static final long serialVersionUID = 1L;
+
+}

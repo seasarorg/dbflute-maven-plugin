@@ -1,0 +1,16 @@
+<%@page pageEncoding="UTF-8" %>
+
+#set($D = '$')
+     
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<div class="crud-portlet">
+<html:errors/>
+<br>
+<s:link href="index"><bean:message key="labels.crud_button_back"/></s:link>
+</div>
+</body>
+</html>

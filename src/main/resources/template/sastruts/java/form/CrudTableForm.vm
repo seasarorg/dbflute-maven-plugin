@@ -1,0 +1,14 @@
+package ${crudContext.formPkg};
+
+import java.io.Serializable;
+
+import ${crudContext.baseFormPkg}.Bs${table.className}Form;
+
+public class ${table.className}Form extends Bs${table.className}Form implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    public void initialize() {
+        super.initialize();
+    }
+}

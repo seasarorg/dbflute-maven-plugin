@@ -1,0 +1,22 @@
+package ${crudContext.pagerPkg};
+
+import ${crudContext.basePagerPkg}.Bs${table.className}Pager;
+
+public class ${table.className}Pager extends Bs${table.className}Pager {
+
+    private static final long serialVersionUID = 1L;
+
+    public ${table.className}Pager() {
+        super();
+    }
+
+    public void clear() {
+        super.clear();
+    }
+
+    @Override
+    protected int getDefaultPageSize() {
+        return super.getDefaultPageSize();
+    }
+
+}
