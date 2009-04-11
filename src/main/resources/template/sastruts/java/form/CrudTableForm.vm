@@ -1,8 +1,8 @@
-package ${crudContext.formPkg};
+package ${crudContext.formPackage};
 
 import java.io.Serializable;
 
-import ${crudContext.baseFormPkg}.Bs${table.className}Form;
+import ${crudContext.baseFormPackage}.Bs${table.className}Form;
 
 public class ${table.className}Form extends Bs${table.className}Form implements Serializable {
 

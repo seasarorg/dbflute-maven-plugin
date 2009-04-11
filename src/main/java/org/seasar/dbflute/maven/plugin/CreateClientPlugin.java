@@ -18,20 +18,20 @@ package org.seasar.dbflute.maven.plugin;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.download.DBFluteDownloader;
+import org.seasar.dbflute.maven.plugin.client.ClientCreator;
 import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.framework.beans.util.Beans;
 
 /**
- * Download Plugin provides download goal to download a zip file of dbflute.
+ * CreateClientPlugin provides create-client goal to create dbflute client.
  * 
- * @goal download
+ * @goal create-client
  * 
  * @author shinsuke
  *
  */
-public class DownloadPlugin extends AbstractDBFluteMojo {
+public class CreateClientPlugin extends AbstractDBFluteMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
@@ -41,16 +41,13 @@ public class DownloadPlugin extends AbstractDBFluteMojo {
         }
 
         String dbfluteName = downloadFilePrefix + dbfluteVersion;
-        String downloadPath = downloadDirUrl + dbfluteName
-                + downloadFileExtension;
         DBFluteContext context = Beans
                 .createAndCopy(DBFluteContext.class, this).excludesNull()
                 .execute();
         context.setDbfluteName(dbfluteName);
-        context.setDownloadPath(downloadPath);
 
-        DBFluteDownloader downloader = new DBFluteDownloader(context);
-        downloader.execute();
+        ClientCreator creator = new ClientCreator(context);
+        creator.execute();
     }
 
 }

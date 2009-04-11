@@ -28,6 +28,52 @@ import org.apache.maven.plugin.AbstractMojo;
 public abstract class AbstractDBFluteMojo extends AbstractMojo {
 
     /**
+     * @parameter expression="${dbflute.schemaName}"
+     */
+    protected String schemaName;
+
+    /**
+     * @parameter expression="${dbflute.database}" default-value="h2"
+     */
+    protected String database;
+
+    /**
+     * @parameter expression="${dbflute.targetLanguage}" default-value="java"
+     */
+    protected String targetLanguage;
+
+    /**
+     * @parameter expression="${dbflute.targetContainer}" default-value="seasar"
+     */
+    protected String targetContainer;
+
+    /**
+     * @parameter expression="${dbflute.databaseDriver}" default-value="org.h2.Driver"
+     */
+    protected String databaseDriver;
+
+    // default-value="jdbc:h2:file:../src/main/webapp/WEB-INF/db/..."
+    /**
+     * @parameter expression="${dbflute.databaseUrl}"
+     */
+    protected String databaseUrl;
+
+    /**
+     * @parameter expression="${dbflute.databaseSchema}" default-value=" "
+     */
+    protected String databaseSchema;
+
+    /**
+     * @parameter expression="${dbflute.databaseUser}" default-value="sa"
+     */
+    protected String databaseUser;
+
+    /**
+     * @parameter expression="${dbflute.databasePassword}" default-value=" "
+     */
+    protected String databasePassword;
+
+    /**
      * @parameter expression="${dbflute.rootPackage}"
      */
     protected String rootPackage;
@@ -83,9 +129,9 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
     protected File jspDir;
 
     /**
-     * @parameter expression="${dbflute.resourceDir}" default-value="${basedir}/src/main/resources"
+     * @parameter expression="${dbflute.resourcesDir}" default-value="${basedir}/src/main/resources"
      */
-    protected File resourceDir;
+    protected File resourcesDir;
 
     /**
      * @parameter expression="${dbflute.messagePropertyName}" default-value="application"
@@ -118,84 +164,232 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
     protected File mydbfluteDir;
 
     /**
-     * @parameter expression="${dbflute.dbfluteConfigDir}" default-value="${basedir}/dbflute"
+     * @parameter expression="${dbflute.dbfluteClientDir}" default-value="${basedir}/dbflute"
      */
-    protected File dbfluteConfigDir;
+    protected File dbfluteClientDir;
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getTargetLanguage() {
+        return targetLanguage;
+    }
+
+    public void setTargetLanguage(String targetLanguage) {
+        this.targetLanguage = targetLanguage;
+    }
+
+    public String getTargetContainer() {
+        return targetContainer;
+    }
+
+    public void setTargetContainer(String targetContainer) {
+        this.targetContainer = targetContainer;
+    }
+
+    public String getDatabaseDriver() {
+        return databaseDriver;
+    }
+
+    public void setDatabaseDriver(String databaseDriver) {
+        this.databaseDriver = databaseDriver;
+    }
+
+    public String getDatabaseUrl() {
+        return databaseUrl;
+    }
+
+    public void setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
+
+    public String getDatabaseSchema() {
+        return databaseSchema;
+    }
+
+    public void setDatabaseSchema(String databaseSchema) {
+        this.databaseSchema = databaseSchema;
+    }
+
+    public String getDatabaseUser() {
+        return databaseUser;
+    }
+
+    public void setDatabaseUser(String databaseUser) {
+        this.databaseUser = databaseUser;
+    }
+
+    public String getDatabasePassword() {
+        return databasePassword;
+    }
+
+    public void setDatabasePassword(String databasePassword) {
+        this.databasePassword = databasePassword;
+    }
+
+    public String getRootPackage() {
+        return rootPackage;
+    }
 
     public void setRootPackage(String rootPackage) {
         this.rootPackage = rootPackage;
+    }
+
+    public String getDbPackage() {
+        return dbPackage;
     }
 
     public void setDbPackage(String dbPackage) {
         this.dbPackage = dbPackage;
     }
 
+    public String getViewPrefix() {
+        return viewPrefix;
+    }
+
     public void setViewPrefix(String viewPrefix) {
         this.viewPrefix = viewPrefix;
+    }
+
+    public String getBasePackageName() {
+        return basePackageName;
     }
 
     public void setBasePackageName(String basePackageName) {
         this.basePackageName = basePackageName;
     }
 
+    public String getActionPackageName() {
+        return actionPackageName;
+    }
+
     public void setActionPackageName(String actionPackageName) {
         this.actionPackageName = actionPackageName;
+    }
+
+    public String getFormPackageName() {
+        return formPackageName;
     }
 
     public void setFormPackageName(String formPackageName) {
         this.formPackageName = formPackageName;
     }
 
+    public String getServicePackageName() {
+        return servicePackageName;
+    }
+
     public void setServicePackageName(String servicePackageName) {
         this.servicePackageName = servicePackageName;
+    }
+
+    public String getPagerPackageName() {
+        return pagerPackageName;
     }
 
     public void setPagerPackageName(String pagerPackageName) {
         this.pagerPackageName = pagerPackageName;
     }
 
+    public File getSchemaFile() {
+        return schemaFile;
+    }
+
     public void setSchemaFile(File schemaFile) {
         this.schemaFile = schemaFile;
+    }
+
+    public File getJavaDir() {
+        return javaDir;
     }
 
     public void setJavaDir(File javaDir) {
         this.javaDir = javaDir;
     }
 
+    public File getJspDir() {
+        return jspDir;
+    }
+
     public void setJspDir(File jspDir) {
         this.jspDir = jspDir;
     }
 
-    public void setResourceDir(File resourceDir) {
-        this.resourceDir = resourceDir;
+    public File getResourcesDir() {
+        return resourcesDir;
+    }
+
+    public void setResourcesDir(File resourceDir) {
+        this.resourcesDir = resourceDir;
+    }
+
+    public String getMessagePropertyName() {
+        return messagePropertyName;
     }
 
     public void setMessagePropertyName(String messagePropertyName) {
         this.messagePropertyName = messagePropertyName;
     }
 
+    public String getDbfluteVersion() {
+        return dbfluteVersion;
+    }
+
     public void setDbfluteVersion(String dbfluteVersion) {
         this.dbfluteVersion = dbfluteVersion;
+    }
+
+    public String getDownloadDirUrl() {
+        return downloadDirUrl;
     }
 
     public void setDownloadDirUrl(String downloadDirUrl) {
         this.downloadDirUrl = downloadDirUrl;
     }
 
+    public String getDownloadFilePrefix() {
+        return downloadFilePrefix;
+    }
+
     public void setDownloadFilePrefix(String downloadFilePrefix) {
         this.downloadFilePrefix = downloadFilePrefix;
+    }
+
+    public String getDownloadFileExtension() {
+        return downloadFileExtension;
     }
 
     public void setDownloadFileExtension(String downloadFileExtension) {
         this.downloadFileExtension = downloadFileExtension;
     }
 
+    public File getMydbfluteDir() {
+        return mydbfluteDir;
+    }
+
     public void setMydbfluteDir(File mydbfluteDir) {
         this.mydbfluteDir = mydbfluteDir;
     }
 
-    public void setDbfluteConfigDir(File dbfluteConfigDir) {
-        this.dbfluteConfigDir = dbfluteConfigDir;
+    public File getDbfluteClientDir() {
+        return dbfluteClientDir;
+    }
+
+    public void setDbfluteClientDir(File dbfluteClientDir) {
+        this.dbfluteClientDir = dbfluteClientDir;
     }
 
 }

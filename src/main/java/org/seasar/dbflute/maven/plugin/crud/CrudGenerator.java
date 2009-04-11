@@ -40,10 +40,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.seasar.dbflute.maven.plugin.entity.CrudContext;
+import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.entity.Database;
 import org.seasar.dbflute.maven.plugin.entity.Table;
-import org.seasar.dbflute.maven.plugin.util.ResourceUtil;
+import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
+import org.seasar.framework.util.ResourceUtil;
 
 /**
  * CrudGenerator generates .java and .jsp files for CRUD pages.
@@ -60,11 +61,11 @@ public class CrudGenerator {
 
     private File schemaFile;
 
-    private CrudContext crudContext;
+    private DBFluteContext context;
 
-    public CrudGenerator(File schemaFile, CrudContext crudContext) {
+    public CrudGenerator(File schemaFile, DBFluteContext context) {
         this.schemaFile = schemaFile;
-        this.crudContext = crudContext;
+        this.context = context;
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -88,28 +89,29 @@ public class CrudGenerator {
         Database database = getDatabaseModel();
 
         // create dir
-        ResourceUtil.makeDir(crudContext.getActionJavaDir());
-        ResourceUtil.makeDir(crudContext.getBaseActionJavaDir());
-        ResourceUtil.makeDir(crudContext.getBaseFormJavaDir());
-        ResourceUtil.makeDir(crudContext.getBasePagerJavaDir());
-        ResourceUtil.makeDir(crudContext.getBaseServiceJavaDir());
-        ResourceUtil.makeDir(crudContext.getFormJavaDir());
-        ResourceUtil.makeDir(crudContext.getPagerJavaDir());
-        ResourceUtil.makeDir(crudContext.getServiceJavaDir());
-        File utilJavaDir = new File(crudContext.getBaseJavaDir(), "util");
-        ResourceUtil.makeDir(utilJavaDir);
-        File creatorJavaDir = new File(crudContext.getBaseJavaDir(), "creator");
-        ResourceUtil.makeDir(crudContext.getJspDir());
+        ResourceFileUtil.makeDir(context.getActionJavaDir());
+        ResourceFileUtil.makeDir(context.getBaseActionJavaDir());
+        ResourceFileUtil.makeDir(context.getBaseFormJavaDir());
+        ResourceFileUtil.makeDir(context.getBasePagerJavaDir());
+        ResourceFileUtil.makeDir(context.getBaseServiceJavaDir());
+        ResourceFileUtil.makeDir(context.getFormJavaDir());
+        ResourceFileUtil.makeDir(context.getPagerJavaDir());
+        ResourceFileUtil.makeDir(context.getServiceJavaDir());
+        File utilJavaDir = new File(context.getBaseJavaDir(), "util");
+        ResourceFileUtil.makeDir(utilJavaDir);
+        File creatorJavaDir = new File(context.getBaseJavaDir(), "creator");
+        ResourceFileUtil.makeDir(creatorJavaDir);
+        ResourceFileUtil.makeDir(context.getJspDir());
 
         // action/CrudTableAction.java
         for (Table table : database.getTableList()) {
             String className = table.getClassName() + "Action";
-            File classFile = new File(crudContext.getActionJavaDir(), className
+            File classFile = new File(context.getActionJavaDir(), className
                     + ".java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(classFile, TEMPLATE_JAVA_PATH
@@ -119,12 +121,12 @@ public class CrudGenerator {
 
         // action/IndexAction.java
         {
-            File classFile = new File(crudContext.getActionJavaDir(),
+            File classFile = new File(context.getActionJavaDir(),
                     "IndexAction.java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(classFile, TEMPLATE_JAVA_PATH
                         + "action/IndexAction.vm", params);
@@ -133,12 +135,12 @@ public class CrudGenerator {
 
         // base/CommonConstants.java
         {
-            File classFile = new File(crudContext.getBaseJavaDir(),
+            File classFile = new File(context.getBaseJavaDir(),
                     "CommonConstants.java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(classFile, TEMPLATE_JAVA_PATH
                         + "base/CommonConstants.vm", params);
@@ -151,7 +153,7 @@ public class CrudGenerator {
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(classFile, TEMPLATE_JAVA_PATH
                         + "base/util/SAStrutsUtil.vm", params);
@@ -161,10 +163,10 @@ public class CrudGenerator {
         // base/action/BsCrudTableAction.java
         for (Table table : database.getTableList()) {
             String className = "Bs" + table.getClassName() + "Action";
-            File classFile = new File(crudContext.getBaseActionJavaDir(),
-                    className + ".java");
+            File classFile = new File(context.getBaseActionJavaDir(), className
+                    + ".java");
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", crudContext);
+            params.put("crudContext", context);
             params.put("database", database);
             params.put("table", table);
             createFile(classFile, TEMPLATE_JAVA_PATH
@@ -174,10 +176,10 @@ public class CrudGenerator {
         // base/pager/BsCrudTablePager.java
         for (Table table : database.getTableList()) {
             String className = "Bs" + table.getClassName() + "Pager";
-            File classFile = new File(crudContext.getBasePagerJavaDir(),
-                    className + ".java");
+            File classFile = new File(context.getBasePagerJavaDir(), className
+                    + ".java");
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", crudContext);
+            params.put("crudContext", context);
             params.put("database", database);
             params.put("table", table);
             createFile(classFile, TEMPLATE_JAVA_PATH
@@ -187,10 +189,10 @@ public class CrudGenerator {
         // base/form/BsCrudTableForm.java
         for (Table table : database.getTableList()) {
             String className = "Bs" + table.getClassName() + "Form";
-            File classFile = new File(crudContext.getBaseFormJavaDir(),
-                    className + ".java");
+            File classFile = new File(context.getBaseFormJavaDir(), className
+                    + ".java");
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", crudContext);
+            params.put("crudContext", context);
             params.put("database", database);
             params.put("table", table);
             createFile(classFile, TEMPLATE_JAVA_PATH
@@ -200,10 +202,10 @@ public class CrudGenerator {
         // base/service/BsCrudTableService.java
         for (Table table : database.getTableList()) {
             String className = "Bs" + table.getClassName() + "Service";
-            File classFile = new File(crudContext.getBaseServiceJavaDir(),
+            File classFile = new File(context.getBaseServiceJavaDir(),
                     className + ".java");
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", crudContext);
+            params.put("crudContext", context);
             params.put("database", database);
             params.put("table", table);
             createFile(classFile, TEMPLATE_JAVA_PATH
@@ -213,12 +215,12 @@ public class CrudGenerator {
         // pager/CrudTablePager.java
         for (Table table : database.getTableList()) {
             String className = table.getClassName() + "Pager";
-            File classFile = new File(crudContext.getPagerJavaDir(), className
+            File classFile = new File(context.getPagerJavaDir(), className
                     + ".java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(classFile, TEMPLATE_JAVA_PATH
@@ -229,12 +231,12 @@ public class CrudGenerator {
         // form/CrudTableForm.java
         for (Table table : database.getTableList()) {
             String className = table.getClassName() + "Form";
-            File classFile = new File(crudContext.getFormJavaDir(), className
+            File classFile = new File(context.getFormJavaDir(), className
                     + ".java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(classFile, TEMPLATE_JAVA_PATH
@@ -248,7 +250,7 @@ public class CrudGenerator {
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(classFile, TEMPLATE_JAVA_PATH
                         + "base/creator/PagerCreator.vm", params);
@@ -258,12 +260,12 @@ public class CrudGenerator {
         // service/CrudTableService.java
         for (Table table : database.getTableList()) {
             String className = table.getClassName() + "Service";
-            File classFile = new File(crudContext.getServiceJavaDir(),
-                    className + ".java");
+            File classFile = new File(context.getServiceJavaDir(), className
+                    + ".java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(classFile, TEMPLATE_JAVA_PATH
@@ -273,12 +275,12 @@ public class CrudGenerator {
 
         // baseCrudMessageException.java
         {
-            File classFile = new File(crudContext.getBaseJavaDir(),
+            File classFile = new File(context.getBaseJavaDir(),
                     "CrudMessageException.java");
             if (!classFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(classFile, TEMPLATE_JAVA_PATH
                         + "base/CrudMessageException.vm", params);
@@ -287,15 +289,15 @@ public class CrudGenerator {
 
         for (Table table : database.getTableList()) {
             String propertyName = table.getPropertyName();
-            File jspDir = new File(crudContext.getJspDir(), propertyName);
-            ResourceUtil.makeDir(jspDir);
+            File jspDir = new File(context.getJspDir(), propertyName);
+            ResourceFileUtil.makeDir(jspDir);
 
             // crudTable/confirm.vm
             File confirmJspFile = new File(jspDir, "confirm.jsp");
             if (!confirmJspFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(confirmJspFile, TEMPLATE_JSP_PATH
@@ -307,7 +309,7 @@ public class CrudGenerator {
             if (!editJspFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(editJspFile,
@@ -319,7 +321,7 @@ public class CrudGenerator {
             if (!errorJspFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(errorJspFile, TEMPLATE_JSP_PATH
@@ -331,7 +333,7 @@ public class CrudGenerator {
             if (!indexJspFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(indexJspFile, TEMPLATE_JSP_PATH
@@ -341,14 +343,14 @@ public class CrudGenerator {
 
         // common/common.vm
         {
-            File jspCommonDir = new File(crudContext.getJspDir(), "common");
-            ResourceUtil.makeDir(jspCommonDir);
+            File jspCommonDir = new File(context.getJspDir(), "common");
+            ResourceFileUtil.makeDir(jspCommonDir);
 
             File commonJspFile = new File(jspCommonDir, "common.jsp");
             if (!commonJspFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(commonJspFile, TEMPLATE_JSP_PATH
                         + "common/common.vm", params);
@@ -357,11 +359,11 @@ public class CrudGenerator {
 
         // index.vm
         {
-            File indexJspFile = new File(crudContext.getJspDir(), "index.jsp");
+            File indexJspFile = new File(context.getJspDir(), "index.jsp");
             if (!indexJspFile.exists()) {
                 // create
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", crudContext);
+                params.put("crudContext", context);
                 params.put("database", database);
                 createFile(indexJspFile, TEMPLATE_JSP_PATH + "index.vm", params);
             }
@@ -372,14 +374,14 @@ public class CrudGenerator {
 
     protected void createMessagePropertyFile() throws MojoFailureException,
             MojoExecutionException {
-        String[] values = crudContext.getPropertyFileName().split("\\.");
-        File propDir = crudContext.getResourcesDir();
+        String[] values = context.getMessagePropertyName().split("\\.");
+        File propDir = context.getResourcesDir();
         for (int i = 0; i < values.length - 1; i++) {
             propDir = new File(propDir, values[i]);
         }
         String propName = values[values.length - 1];
 
-        for (String localeStr : crudContext.getSupportedLocales()) {
+        for (String localeStr : context.getSupportedLocales()) {
             String propFileName = null;
             String basePropFileName = null;
             if (StringUtils.isEmpty(localeStr)) {

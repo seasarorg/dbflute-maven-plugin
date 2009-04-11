@@ -1,16 +1,16 @@
-package ${crudContext.baseServicePkg};
+package ${crudContext.baseServicePackage};
 
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import ${crudContext.basePkg}.CommonConstants;
-import ${crudContext.basePkg}.CrudMessageException;
-import ${crudContext.dbPkg}.cbean.${table.className}CB;
-import ${crudContext.dbPkg}.exbhv.${table.className}Bhv;
-import ${crudContext.dbPkg}.exentity.${table.className};
-import ${crudContext.pagerPkg}.${table.className}Pager;
+import ${crudContext.basePackage}.CommonConstants;
+import ${crudContext.basePackage}.CrudMessageException;
+import ${crudContext.dbPackage}.cbean.${table.className}CB;
+import ${crudContext.dbPackage}.exbhv.${table.className}Bhv;
+import ${crudContext.dbPackage}.exentity.${table.className};
+import ${crudContext.pagerPackage}.${table.className}Pager;
 
 import org.seasar.dbflute.cbean.PagingResultBean;
 import org.seasar.framework.beans.util.Beans;

@@ -131,6 +131,11 @@
       <artifactId>velocity</artifactId>
       <version>1.6</version>
     </dependency>
+    <dependency>
+      <groupId>org.seasar.container</groupId>
+      <artifactId>s2-tiger</artifactId>
+      <version>2.4.34</version>
+    </dependency>
 <!-- for Test -->
     <dependency>
       <groupId>junit</groupId>

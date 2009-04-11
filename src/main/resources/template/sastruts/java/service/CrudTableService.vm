@@ -1,12 +1,12 @@
-package ${crudContext.servicePkg};
+package ${crudContext.servicePackage};
 
 import java.io.Serializable;
 import java.util.Map;
 
-import ${crudContext.baseServicePkg}.Bs${table.className}Service;
-import ${crudContext.dbPkg}.cbean.${table.className}CB;
-import ${crudContext.dbPkg}.exentity.${table.className};
-import ${crudContext.pagerPkg}.${table.className}Pager;
+import ${crudContext.baseServicePackage}.Bs${table.className}Service;
+import ${crudContext.dbPackage}.cbean.${table.className}CB;
+import ${crudContext.dbPackage}.exentity.${table.className};
+import ${crudContext.pagerPackage}.${table.className}Pager;
 
 public class ${table.className}Service extends Bs${table.className}Service implements
         Serializable {

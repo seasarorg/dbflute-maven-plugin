@@ -19,19 +19,14 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.seasar.dbflute.maven.plugin.util.ResourceUtil;
+import org.seasar.framework.util.ResourceUtil;
 
-public class ResourceUtilTest extends AbstractMojoTestCase {
-    public void test_getResourceAsStream() {
-        InputStream is = ResourceUtil
-                .getResourceAsStream("template/sastruts/resources/application.properties");
-        assertNotNull(is);
-    }
+public class ResourceFileUtilTest extends AbstractMojoTestCase {
 
     public void test_makeDir() throws Exception {
         File tempDir = File.createTempFile("mdp-", "");
         assertTrue(tempDir.delete());
-        ResourceUtil.makeDir(tempDir);
+        ResourceFileUtil.makeDir(tempDir);
         assertTrue(tempDir.isDirectory());
     }
 
@@ -39,7 +34,7 @@ public class ResourceUtilTest extends AbstractMojoTestCase {
         File tempDir = File.createTempFile("mdp-", "");
         assertTrue(tempDir.delete());
         tempDir.mkdirs();
-        ResourceUtil.makeDir(tempDir);
+        ResourceFileUtil.makeDir(tempDir);
         assertTrue(tempDir.isDirectory());
     }
 
@@ -47,7 +42,7 @@ public class ResourceUtilTest extends AbstractMojoTestCase {
         InputStream is = ResourceUtil.getResourceAsStream("zip/hoge.zip");
         File tempDir = File.createTempFile("mdp-", "");
         assertTrue(tempDir.delete());
-        ResourceUtil.unzip(is, tempDir);
+        ResourceFileUtil.unzip(is, tempDir);
         assertTrue(tempDir.isDirectory());
         File hogeDir = new File(tempDir, "hoge");
         assertTrue(hogeDir.isDirectory());

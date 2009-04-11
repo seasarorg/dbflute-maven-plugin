@@ -1,4 +1,4 @@
-package ${crudContext.basePkg}.creator;
+package ${crudContext.basePackage}.creator;
 
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;

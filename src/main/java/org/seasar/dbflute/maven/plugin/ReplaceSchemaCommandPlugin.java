@@ -15,42 +15,32 @@
  */
 package org.seasar.dbflute.maven.plugin;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.download.DBFluteDownloader;
+import org.seasar.dbflute.maven.plugin.command.CommandExecutor;
 import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.framework.beans.util.Beans;
 
 /**
- * Download Plugin provides download goal to download a zip file of dbflute.
+ * ReplaceSchemaCommandPlugin provides replace-schema goal to run replace-schema.[sh|bat].
  * 
- * @goal download
+ * @goal replace-schema
  * 
  * @author shinsuke
  *
  */
-public class DownloadPlugin extends AbstractDBFluteMojo {
+public class ReplaceSchemaCommandPlugin extends AbstractDBFluteMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
 
-        if (StringUtils.isBlank(dbfluteVersion)) {
-            throw new MojoFailureException("Missing dbfluteVersion property.");
-        }
-
-        String dbfluteName = downloadFilePrefix + dbfluteVersion;
-        String downloadPath = downloadDirUrl + dbfluteName
-                + downloadFileExtension;
         DBFluteContext context = Beans
                 .createAndCopy(DBFluteContext.class, this).excludesNull()
                 .execute();
-        context.setDbfluteName(dbfluteName);
-        context.setDownloadPath(downloadPath);
 
-        DBFluteDownloader downloader = new DBFluteDownloader(context);
-        downloader.execute();
+        CommandExecutor creator = new CommandExecutor(context);
+        creator.execute("replace-schema");
     }
 
 }

@@ -1,6 +1,6 @@
-package ${crudContext.actionPkg};
+package ${crudContext.actionPackage};
 
-import ${crudContext.baseActionPkg}.Bs${table.className}Action;
+import ${crudContext.baseActionPackage}.Bs${table.className}Action;
 
 public class ${table.className}Action extends Bs${table.className}Action {
 

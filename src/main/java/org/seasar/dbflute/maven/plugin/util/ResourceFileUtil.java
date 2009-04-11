@@ -34,16 +34,13 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author shinsuke
  *
  */
-public class ResourceUtil {
-    public static InputStream getResourceAsStream(String path) {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        return loader.getResourceAsStream(path);
-    }
+public class ResourceFileUtil {
 
     public static void makeDir(File dir) throws MojoFailureException {
         if (dir.isDirectory()) {
             return;
         }
+        LogUtil.getLog().info("Creating " + dir.getAbsolutePath());
         if (!dir.mkdirs()) {
             throw new MojoFailureException("Could not create "
                     + dir.getAbsolutePath());
@@ -68,13 +65,13 @@ public class ResourceUtil {
             while ((zipEntry = in.getNextEntry()) != null) {
                 String entryName = zipEntry.getName();
                 if (zipEntry.isDirectory()) {
-                    LogUtil.getLog().info("Creating " + entryName);
+                    LogUtil.getLog().info("Extracting " + entryName);
 
                     File targetFile = new File(unzipDbfluteDir + File.separator
                             + entryName);
                     makeDir(targetFile);
                 } else {
-                    LogUtil.getLog().info("Creating " + entryName);
+                    LogUtil.getLog().info("Extracting " + entryName);
 
                     File targetFile = new File(unzipDbfluteDir + File.separator
                             + entryName);
@@ -113,4 +110,5 @@ public class ResourceUtil {
             IOUtils.closeQuietly(in);
         }
     }
+
 }

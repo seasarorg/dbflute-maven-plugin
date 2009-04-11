@@ -18,38 +18,30 @@ package org.seasar.dbflute.maven.plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.seasar.dbflute.maven.plugin.crud.CrudGenerator;
-import org.seasar.dbflute.maven.plugin.entity.CrudContext;
+import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
+import org.seasar.framework.beans.util.Beans;
 
 /**
  * GenerateCrudPlugin provides generate-crud goal to generate CRUD pages.
  * 
- * @author shinsuke
- * 
  * @goal generate-crud
  * 
  * @execute phase="generate-resources"
+ * 
+ * @author shinsuke
+ * 
  */
 public class GenerateCrudPlugin extends AbstractDBFluteMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
 
-        CrudContext crudContext = new CrudContext();
-        crudContext.setJavaDir(javaDir);
-        crudContext.setJspDir(jspDir);
-        crudContext.setResourcesDir(resourceDir);
-        crudContext.setRootPkg(rootPackage);
-        crudContext.setDbPkg(dbPackage);
-        crudContext.setViewPrefix(viewPrefix);
-        crudContext.setPropertyFileName(messagePropertyName);
-        crudContext.setBasePkgName(basePackageName);
-        crudContext.setActionPkgName(actionPackageName);
-        crudContext.setFormPkgName(formPackageName);
-        crudContext.setServicePkgName(servicePackageName);
-        crudContext.setPagerPkgName(pagerPackageName);
-        crudContext.init();
-        CrudGenerator generator = new CrudGenerator(schemaFile, crudContext);
+        DBFluteContext context = Beans
+                .createAndCopy(DBFluteContext.class, this).excludesNull()
+                .execute();
+        context.buildCrudPackage();
+        CrudGenerator generator = new CrudGenerator(schemaFile, context);
         generator.execute();
     }
 

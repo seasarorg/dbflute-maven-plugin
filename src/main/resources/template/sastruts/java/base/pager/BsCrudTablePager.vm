@@ -1,4 +1,4 @@
-package ${crudContext.basePagerPkg};
+package ${crudContext.basePagerPackage};
 
 import java.io.Serializable;
 import java.util.List;

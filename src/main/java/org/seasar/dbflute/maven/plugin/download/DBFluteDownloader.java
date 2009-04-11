@@ -19,9 +19,9 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.entity.DownloadContext;
+import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
-import org.seasar.dbflute.maven.plugin.util.ResourceUtil;
+import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
 
 /**
  * DBFluteDownloader downloads dbflute-*.zip and extracts it.
@@ -30,9 +30,9 @@ import org.seasar.dbflute.maven.plugin.util.ResourceUtil;
  *
  */
 public class DBFluteDownloader {
-    protected DownloadContext context;
+    protected DBFluteContext context;
 
-    public DBFluteDownloader(DownloadContext context) {
+    public DBFluteDownloader(DBFluteContext context) {
         this.context = context;
     }
 
@@ -40,7 +40,8 @@ public class DBFluteDownloader {
         File dbfluteDir = context.getDbfluteDir();
         if (!dbfluteDir.exists()) {
             LogUtil.getLog().info("Creating " + dbfluteDir.getAbsolutePath());
-            ResourceUtil.unzip(context.getDownloadInputStream(), dbfluteDir);
+            ResourceFileUtil
+                    .unzip(context.getDownloadInputStream(), dbfluteDir);
         }
 
     }

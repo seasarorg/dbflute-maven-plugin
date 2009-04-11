@@ -1,6 +1,6 @@
-package ${crudContext.pagerPkg};
+package ${crudContext.pagerPackage};
 
-import ${crudContext.basePagerPkg}.Bs${table.className}Pager;
+import ${crudContext.basePagerPackage}.Bs${table.className}Pager;
 
 public class ${table.className}Pager extends Bs${table.className}Pager {
 

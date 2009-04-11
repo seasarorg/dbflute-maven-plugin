@@ -21,7 +21,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.seasar.dbflute.maven.plugin.crud.DBSchemaHandler;
 import org.seasar.dbflute.maven.plugin.entity.Database;
 
 public class DBSchemaHandlerTest extends AbstractMojoTestCase {

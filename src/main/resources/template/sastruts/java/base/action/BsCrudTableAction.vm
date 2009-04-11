@@ -1,4 +1,4 @@
-package ${crudContext.baseActionPkg};
+package ${crudContext.baseActionPackage};
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -7,13 +7,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import ${crudContext.basePkg}.CommonConstants;
-import ${crudContext.basePkg}.CrudMessageException;
-import ${crudContext.basePkg}.util.SAStrutsUtil;
-import ${crudContext.dbPkg}.exentity.${table.className};
-import ${crudContext.formPkg}.${table.className}Form;
-import ${crudContext.pagerPkg}.${table.className}Pager;
-import ${crudContext.servicePkg}.${table.className}Service;
+import ${crudContext.basePackage}.CommonConstants;
+import ${crudContext.basePackage}.CrudMessageException;
+import ${crudContext.basePackage}.util.SAStrutsUtil;
+import ${crudContext.dbPackage}.exentity.${table.className};
+import ${crudContext.formPackage}.${table.className}Form;
+import ${crudContext.pagerPackage}.${table.className}Pager;
+import ${crudContext.servicePackage}.${table.className}Service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

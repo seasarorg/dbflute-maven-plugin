@@ -1,4 +1,4 @@
-package ${crudContext.basePkg}.util;
+package ${crudContext.basePackage}.util;
 
 import javax.servlet.http.HttpServletRequest;
 
