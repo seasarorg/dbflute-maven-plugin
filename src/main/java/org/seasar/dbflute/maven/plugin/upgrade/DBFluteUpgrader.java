@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.dbflute.maven.plugin.client;
+package org.seasar.dbflute.maven.plugin.upgrade;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,31 +31,41 @@ import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
 
 /**
- * ClientCreator create dbflute client directory.
+ * DBFluteUpgrader downloads dbflute-*.zip, extracts it and replaces _project.*.
  * 
  * @author shinsuke
  *
  */
-public class ClientCreator {
+public class DBFluteUpgrader {
     protected DBFluteContext context;
 
-    public ClientCreator(DBFluteContext context) {
+    public DBFluteUpgrader(DBFluteContext context) {
         this.context = context;
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+
         File dbfluteDir = context.getDbfluteDir();
         File dbfluteClientDir = context.getDbfluteClientDir();
-        if (dbfluteClientDir.isDirectory()) {
-            LogUtil.getLog().info(
-                    dbfluteClientDir.getAbsolutePath() + " already exists.");
-            return;
+        if (!dbfluteClientDir.isDirectory()) {
+            throw new MojoFailureException(dbfluteClientDir.getAbsolutePath()
+                    + " does not exist.");
+        }
+
+        // Check schemaName
+        if (StringUtils.isBlank(context.getSchemaName())) {
+            throw new MojoFailureException("Missing schemaName.");
+        }
+
+        if (!dbfluteDir.exists()) {
+            LogUtil.getLog().info("Creating " + dbfluteDir.getAbsolutePath());
+            ResourceFileUtil
+                    .unzip(context.getDownloadInputStream(), dbfluteDir);
         }
 
         LogUtil.getLog().info("Creating " + dbfluteClientDir.getAbsolutePath());
         File clientZipFile = new File(dbfluteDir,
                 "etc/client-template/dbflute_dfclient.zip");
-        LogUtil.getLog().info("Unzip " + clientZipFile.getAbsolutePath());
         if (!clientZipFile.exists()) {
             throw new MojoFailureException(clientZipFile.getAbsolutePath()
                     + " does not exist.");
@@ -71,19 +81,28 @@ public class ClientCreator {
                     + " is not found.", e);
         }
 
+        // copy _project.*
+        File srcFile;
+        File destFile;
         try {
-            LogUtil.getLog().info(
-                    "Creating " + dbfluteClientDir.getAbsolutePath());
-            FileUtils.copyDirectory(new File(tempDir, "dbflute_dfclient"),
-                    dbfluteClientDir);
+            srcFile = new File(tempDir, "dbflute_dfclient" + File.separator
+                    + "_project.sh");
+            destFile = new File(dbfluteClientDir, "_project.sh");
+            LogUtil.getLog().info("Replacing " + destFile.getAbsolutePath());
+            FileUtils.copyFile(srcFile, destFile);
         } catch (IOException e) {
-            throw new MojoExecutionException("Could not create "
-                    + dbfluteClientDir.getAbsolutePath(), e);
+            throw new MojoExecutionException("Could not replace _project.sh.",
+                    e);
         }
-
-        // Check schemaName
-        if (StringUtils.isBlank(context.getSchemaName())) {
-            throw new MojoFailureException("Missing schemaName.");
+        try {
+            srcFile = new File(tempDir, "dbflute_dfclient" + File.separator
+                    + "_project.bat");
+            destFile = new File(dbfluteClientDir, "_project.bat");
+            LogUtil.getLog().info("Replacing " + destFile.getAbsolutePath());
+            FileUtils.copyFile(srcFile, destFile);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not replace _project.bat.",
+                    e);
         }
 
         // _project.sh
@@ -104,50 +123,6 @@ public class ClientCreator {
                         .getDbfluteName());
         ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
                 "_project.bat"), params);
-
-        // build-dfclient.properties
-        params.clear();
-        putParam(params, "torque.project *= *[^\r\n]+", "torque.project = ",
-                context.getSchemaName());
-        // 0.8.x
-        putParam(params, "torque.database *= *[^\r\n]+", "torque.database = ",
-                context.getDatabase());
-        putParam(params, "torque.packageBase *= *[^\r\n]+",
-                "torque.packageBase = ", context.getDatabase());
-        File propertyFile = new File(context.getDbfluteClientDir(),
-                "build-dfclient.properties");
-        ResourceFileUtil.replaceContent(propertyFile, params);
-        propertyFile.renameTo(new File(context.getDbfluteClientDir(), "build-"
-                + context.getSchemaName() + ".properties"));
-
-        // dfprop/basicInfoMap.dfprop
-        params.clear();
-        putParam(params, "; database *= *[^\r\n]+", "; database = ", context
-                .getDatabase());
-        putParam(params, "; targetLanguage *= *[^\r\n]+",
-                "; targetLanguage = ", context.getTargetLanguage());
-        putParam(params, "; targetContainer *= *[^\r\n]+",
-                "; targetContainer = ", context.getTargetContainer());
-        putParam(params, "; packageBase *= *[^\r\n]+", "; packageBase = ",
-                context.getDbPackage());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
-                "dfprop/basicInfoMap.dfprop"), params);
-
-        // dfprop/databaseInfoMap.dfprop
-        params.clear();
-        putParam(params, "; driver *= *[^\r\n]+", "; driver = ", context
-                .getDatabaseDriver());
-        putParam(params, "; url *= *[^\r\n]+", "; url = ", context
-                .getDatabaseUrl());
-        putParam(params, "; schema *= *[^\r\n]+", "; schema = ", context
-                .getDatabaseSchema());
-        putParam(params, "; user *= *[^\r\n]+", "; user = ", context
-                .getDatabaseUser());
-        putParam(params, "; password *= *[^\r\n]+", "; password = ", context
-                .getDatabasePassword());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
-                "dfprop/databaseInfoMap.dfprop"), params);
-
     }
 
     protected void putParam(Map<String, String> params, String key,

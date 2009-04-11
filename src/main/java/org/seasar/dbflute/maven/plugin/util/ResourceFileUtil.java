@@ -21,12 +21,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.seasar.framework.util.FileUtil;
 
 /**
  * A utility class to handling a resource.
@@ -45,6 +50,24 @@ public class ResourceFileUtil {
             throw new MojoFailureException("Could not create "
                     + dir.getAbsolutePath());
         }
+    }
+
+    public static File createTempDir(String prefix, String suffix)
+            throws MojoExecutionException, MojoFailureException {
+        // create temp dir
+        File tempDir = null;
+        try {
+            tempDir = File.createTempFile("dbflute-client", "");
+        } catch (IOException e) {
+            throw new MojoExecutionException(
+                    "Could not create a temp directory. ", e);
+        }
+        if (!tempDir.delete()) {
+            throw new MojoFailureException(
+                    "Could not create a temp directory: "
+                            + tempDir.getAbsolutePath());
+        }
+        return tempDir;
     }
 
     public static void unzip(InputStream inputStream, File unzipDbfluteDir)
@@ -109,6 +132,32 @@ public class ResourceFileUtil {
         } finally {
             IOUtils.closeQuietly(in);
         }
+    }
+
+    public static void replaceContent(File file, Map<String, String> params)
+            throws MojoExecutionException {
+        if (!file.exists()) {
+            LogUtil.getLog().info(
+                    file.getAbsolutePath()
+                            + " does not exists. Skip a content replacement.");
+        }
+    
+        LogUtil.getLog()
+                .info("Replacing contents in " + file.getAbsolutePath());
+        Writer writer = null;
+        try {
+            String content = new String(FileUtil.getBytes(file), "UTF-8");
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                content = content.replaceAll(entry.getKey(), entry.getValue());
+            }
+            writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+            writer.write(content);
+            writer.flush();
+        } catch (IOException e) {
+            throw new MojoExecutionException("I/O error in "
+                    + file.getAbsolutePath(), e);
+        }
+        IOUtils.closeQuietly(writer);
     }
 
 }
