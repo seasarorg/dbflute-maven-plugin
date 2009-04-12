@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -141,7 +140,7 @@ public class ResourceFileUtil {
                     file.getAbsolutePath()
                             + " does not exists. Skip a content replacement.");
         }
-    
+
         LogUtil.getLog()
                 .info("Replacing contents in " + file.getAbsolutePath());
         Writer writer = null;
