@@ -17,7 +17,7 @@ package org.seasar.dbflute.maven.plugin.entity;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.StringUtils;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * Column is an entity class for column tag in a project schema file.
@@ -88,20 +88,8 @@ public class Column implements Serializable {
     public void setName(String name) {
         this.name = name;
         if (name != null) {
-            String[] values = name.split("_");
-            StringBuilder mbuf = new StringBuilder();
-            StringBuilder pbuf = new StringBuilder();
-            for (int i = 0; i < values.length; i++) {
-                if (i == 0) {
-                    mbuf.append(StringUtils.capitalize(values[i]));
-                    pbuf.append(StringUtils.uncapitalize(values[i]));
-                } else {
-                    mbuf.append(StringUtils.capitalize(values[i]));
-                    pbuf.append(StringUtils.capitalize(values[i]));
-                }
-            }
-            methodName = mbuf.toString();
-            propertyName = pbuf.toString();
+            methodName = StringUtil.camelize(name);
+            propertyName = StringUtil.decapitalize(methodName);
         }
     }
 

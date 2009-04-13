@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * Table is an entity class for table tag in a project schema file.
@@ -78,20 +78,8 @@ public class Table implements Serializable {
     public void setName(String name) {
         this.name = name;
         if (name != null) {
-            String[] values = name.split("_");
-            StringBuilder cbuf = new StringBuilder();
-            StringBuilder pbuf = new StringBuilder();
-            for (int i = 0; i < values.length; i++) {
-                if (i == 0) {
-                    cbuf.append(StringUtils.capitalize(values[i]));
-                    pbuf.append(StringUtils.uncapitalize(values[i]));
-                } else {
-                    cbuf.append(StringUtils.capitalize(values[i]));
-                    pbuf.append(StringUtils.capitalize(values[i]));
-                }
-            }
-            className = cbuf.toString();
-            propertyName = pbuf.toString();
+            className = StringUtil.camelize(name);
+            propertyName = StringUtil.decapitalize(className);
         }
     }
 
