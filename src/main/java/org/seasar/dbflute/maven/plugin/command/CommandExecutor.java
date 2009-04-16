@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,8 @@ public class CommandExecutor {
 
         List<String> cmds = new ArrayList<String>();
         if (isWindows()) {
+            cmds.add("cmd.exe");
+            cmds.add("/c");
             cmds.add(cmd + ".bat");
         } else {
             cmds.add("sh");
@@ -72,6 +75,7 @@ public class CommandExecutor {
             throw new MojoExecutionException("Could not run the command.", e);
         }
 
+        OutputStream out = process.getOutputStream();
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(process
@@ -79,12 +83,15 @@ public class CommandExecutor {
             String line;
             while ((line = br.readLine()) != null) {
                 LogUtil.getLog().info(line);
+                out.write('\n');
+                out.flush();
             }
         } catch (IOException e) {
             throw new MojoExecutionException(
                     "Could not print a command result.", e);
         } finally {
             IOUtils.closeQuietly(br);
+            IOUtils.closeQuietly(out);
         }
 
         try {
