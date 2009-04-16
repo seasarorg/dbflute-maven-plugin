@@ -137,9 +137,16 @@ public class DBFluteContext {
         return new File(mydbfluteDir, dbfluteName);
     }
 
+    private String getFileSeparator() {
+        if (File.separator.equals("\\")) {
+            return "\\\\";
+        }
+        return File.separator;
+    }
+
     public void buildCrudPackage() {
         if (StringUtils.isNotBlank(viewPrefix)) {
-            viewPrefix = viewPrefix.replaceAll(File.separator + "+", "/")
+            viewPrefix = viewPrefix.replaceAll(getFileSeparator() + "+", "/")
                     .replaceAll("/+", "/").replaceAll("/$", "");
         } else {
             viewPrefix = "";
@@ -165,28 +172,28 @@ public class DBFluteContext {
 
         // build File
         rootJavaDir = new File(javaDir, rootPackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         baseJavaDir = new File(javaDir, basePackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         actionJavaDir = new File(javaDir, actionPackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         formJavaDir = new File(javaDir, formPackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         serviceJavaDir = new File(javaDir, servicePackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         pagerJavaDir = new File(javaDir, pagerPackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         baseActionJavaDir = new File(javaDir, baseActionPackage.replaceAll(
-                "\\.", File.separator));
+                "\\.", getFileSeparator()));
         baseFormJavaDir = new File(javaDir, baseFormPackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         baseServiceJavaDir = new File(javaDir, baseServicePackage.replaceAll(
-                "\\.", File.separator));
+                "\\.", getFileSeparator()));
         basePagerJavaDir = new File(javaDir, basePagerPackage.replaceAll("\\.",
-                File.separator));
+                getFileSeparator()));
         if (StringUtils.isNotBlank(viewPrefix)) {
             rootJspDir = new File(jspDir, viewPrefix.replaceAll("/",
-                    File.separator));
+                    getFileSeparator()));
         } else {
             rootJspDir = jspDir;
         }
