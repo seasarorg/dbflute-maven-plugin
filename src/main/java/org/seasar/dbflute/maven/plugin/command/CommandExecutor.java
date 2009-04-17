@@ -39,6 +39,8 @@ import org.seasar.dbflute.maven.plugin.util.LogUtil;
 public class CommandExecutor {
     protected DBFluteContext context;
 
+    public char responseChar = 0;
+
     public CommandExecutor(DBFluteContext context) {
         this.context = context;
     }
@@ -83,6 +85,9 @@ public class CommandExecutor {
             String line;
             while ((line = br.readLine()) != null) {
                 LogUtil.getLog().info(line);
+                if (responseChar > 0) {
+                    out.write((char) responseChar);
+                }
                 out.write('\n');
                 out.flush();
             }
