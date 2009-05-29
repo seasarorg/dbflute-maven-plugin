@@ -6,7 +6,7 @@
   <packaging>maven-plugin</packaging>
   <name>Maven DBFlute Plugin</name>
   <description>Maven Plugin of DBFlute</description>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <url>http://dbflute.sandbox.seasar.org/</url>
   <inceptionYear>2006</inceptionYear>
   <licenses>
