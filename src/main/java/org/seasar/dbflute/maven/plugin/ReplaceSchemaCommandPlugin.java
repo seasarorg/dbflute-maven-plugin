@@ -50,7 +50,7 @@ public class ReplaceSchemaCommandPlugin extends AbstractDBFluteMojo {
                     this).excludesNull().execute();
 
             CommandExecutor creator = new CommandExecutor(context);
-            creator.responseChar = 'y';
+            creator.environment.put("answer", "y");
             creator.execute("replace-schema");
         }
     }
