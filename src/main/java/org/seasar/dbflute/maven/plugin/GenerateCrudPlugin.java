@@ -15,11 +15,14 @@
  */
 package org.seasar.dbflute.maven.plugin;
 
+import java.io.File;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.seasar.dbflute.maven.plugin.crud.CrudGenerator;
 import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
+import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
 import org.seasar.framework.beans.util.Beans;
 
 /**
@@ -33,10 +36,15 @@ import org.seasar.framework.beans.util.Beans;
  * 
  */
 public class GenerateCrudPlugin extends AbstractDBFluteMojo {
+    /**
+     * @parameter expression="${dbflute.tableMetaProperties}" default-value="${basedir}/src/main/config/tablemeta.properties"
+     */
+    protected File tableMetaProperties;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
-
+        TableMetaPropertiesUtil.init(tableMetaProperties);
+        
         DBFluteContext context = Beans
                 .createAndCopy(DBFluteContext.class, this).excludesNull()
                 .execute();

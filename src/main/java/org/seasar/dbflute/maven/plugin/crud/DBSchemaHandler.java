@@ -115,6 +115,7 @@ public class DBSchemaHandler extends DefaultHandler {
             database.addTable(table);
             table = null;
         } else if ("column".equals(name)) {
+            column.setTable(table);
             table.addColumn(column);
             column = null;
         }

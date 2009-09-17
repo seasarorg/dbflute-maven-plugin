@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -97,5 +98,21 @@ public class Table implements Serializable {
 
     public String getPropertyName() {
         return propertyName;
+    }
+
+    // meta properties
+
+    public boolean isIgnored() {
+        String value = TableMetaPropertiesUtil.getProperty(getPropertyName()
+                + ".ignored");
+        if (value != null && "true".equalsIgnoreCase(value)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getImportPackages() {
+        return TableMetaPropertiesUtil.getProperty(getPropertyName()
+                + ".importPackages");
     }
 }

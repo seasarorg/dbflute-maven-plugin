@@ -105,17 +105,19 @@ public class CrudGenerator {
 
         // action/CrudTableAction.java
         for (Table table : database.getTableList()) {
-            String className = table.getClassName() + "Action";
-            File classFile = new File(context.getActionJavaDir(), className
-                    + ".java");
-            if (!classFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(classFile, TEMPLATE_JAVA_PATH
-                        + "action/CrudTableAction.vm", params);
+            if (!table.isIgnored()) {
+                String className = table.getClassName() + "Action";
+                File classFile = new File(context.getActionJavaDir(), className
+                        + ".java");
+                if (!classFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(classFile, TEMPLATE_JAVA_PATH
+                            + "action/CrudTableAction.vm", params);
+                }
             }
         }
 
@@ -162,85 +164,97 @@ public class CrudGenerator {
 
         // base/action/BsCrudTableAction.java
         for (Table table : database.getTableList()) {
-            String className = "Bs" + table.getClassName() + "Action";
-            File classFile = new File(context.getBaseActionJavaDir(), className
-                    + ".java");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", context);
-            params.put("database", database);
-            params.put("table", table);
-            createFile(classFile, TEMPLATE_JAVA_PATH
-                    + "base/action/BsCrudTableAction.vm", params);
-        }
-
-        // base/pager/BsCrudTablePager.java
-        for (Table table : database.getTableList()) {
-            String className = "Bs" + table.getClassName() + "Pager";
-            File classFile = new File(context.getBasePagerJavaDir(), className
-                    + ".java");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", context);
-            params.put("database", database);
-            params.put("table", table);
-            createFile(classFile, TEMPLATE_JAVA_PATH
-                    + "base/pager/BsCrudTablePager.vm", params);
-        }
-
-        // base/form/BsCrudTableForm.java
-        for (Table table : database.getTableList()) {
-            String className = "Bs" + table.getClassName() + "Form";
-            File classFile = new File(context.getBaseFormJavaDir(), className
-                    + ".java");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", context);
-            params.put("database", database);
-            params.put("table", table);
-            createFile(classFile, TEMPLATE_JAVA_PATH
-                    + "base/form/BsCrudTableForm.vm", params);
-        }
-
-        // base/service/BsCrudTableService.java
-        for (Table table : database.getTableList()) {
-            String className = "Bs" + table.getClassName() + "Service";
-            File classFile = new File(context.getBaseServiceJavaDir(),
-                    className + ".java");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("crudContext", context);
-            params.put("database", database);
-            params.put("table", table);
-            createFile(classFile, TEMPLATE_JAVA_PATH
-                    + "base/service/BsCrudTableService.vm", params);
-        }
-
-        // pager/CrudTablePager.java
-        for (Table table : database.getTableList()) {
-            String className = table.getClassName() + "Pager";
-            File classFile = new File(context.getPagerJavaDir(), className
-                    + ".java");
-            if (!classFile.exists()) {
-                // create
+            if (!table.isIgnored()) {
+                String className = "Bs" + table.getClassName() + "Action";
+                File classFile = new File(context.getBaseActionJavaDir(),
+                        className + ".java");
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("crudContext", context);
                 params.put("database", database);
                 params.put("table", table);
                 createFile(classFile, TEMPLATE_JAVA_PATH
-                        + "pager/CrudTablePager.vm", params);
+                        + "base/action/BsCrudTableAction.vm", params);
+            }
+        }
+
+        // base/pager/BsCrudTablePager.java
+        for (Table table : database.getTableList()) {
+            if (!table.isIgnored()) {
+                String className = "Bs" + table.getClassName() + "Pager";
+                File classFile = new File(context.getBasePagerJavaDir(),
+                        className + ".java");
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("crudContext", context);
+                params.put("database", database);
+                params.put("table", table);
+                createFile(classFile, TEMPLATE_JAVA_PATH
+                        + "base/pager/BsCrudTablePager.vm", params);
+            }
+        }
+
+        // base/form/BsCrudTableForm.java
+        for (Table table : database.getTableList()) {
+            if (!table.isIgnored()) {
+                String className = "Bs" + table.getClassName() + "Form";
+                File classFile = new File(context.getBaseFormJavaDir(),
+                        className + ".java");
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("crudContext", context);
+                params.put("database", database);
+                params.put("table", table);
+                createFile(classFile, TEMPLATE_JAVA_PATH
+                        + "base/form/BsCrudTableForm.vm", params);
+            }
+        }
+
+        // base/service/BsCrudTableService.java
+        for (Table table : database.getTableList()) {
+            if (!table.isIgnored()) {
+                String className = "Bs" + table.getClassName() + "Service";
+                File classFile = new File(context.getBaseServiceJavaDir(),
+                        className + ".java");
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("crudContext", context);
+                params.put("database", database);
+                params.put("table", table);
+                createFile(classFile, TEMPLATE_JAVA_PATH
+                        + "base/service/BsCrudTableService.vm", params);
+            }
+        }
+
+        // pager/CrudTablePager.java
+        for (Table table : database.getTableList()) {
+            if (!table.isIgnored()) {
+                String className = table.getClassName() + "Pager";
+                File classFile = new File(context.getPagerJavaDir(), className
+                        + ".java");
+                if (!classFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(classFile, TEMPLATE_JAVA_PATH
+                            + "pager/CrudTablePager.vm", params);
+                }
             }
         }
 
         // form/CrudTableForm.java
         for (Table table : database.getTableList()) {
-            String className = table.getClassName() + "Form";
-            File classFile = new File(context.getFormJavaDir(), className
-                    + ".java");
-            if (!classFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(classFile, TEMPLATE_JAVA_PATH
-                        + "form/CrudTableForm.vm", params);
+            if (!table.isIgnored()) {
+                String className = table.getClassName() + "Form";
+                File classFile = new File(context.getFormJavaDir(), className
+                        + ".java");
+                if (!classFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(classFile, TEMPLATE_JAVA_PATH
+                            + "form/CrudTableForm.vm", params);
+                }
             }
         }
 
@@ -259,17 +273,19 @@ public class CrudGenerator {
 
         // service/CrudTableService.java
         for (Table table : database.getTableList()) {
-            String className = table.getClassName() + "Service";
-            File classFile = new File(context.getServiceJavaDir(), className
-                    + ".java");
-            if (!classFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(classFile, TEMPLATE_JAVA_PATH
-                        + "service/CrudTableService.vm", params);
+            if (!table.isIgnored()) {
+                String className = table.getClassName() + "Service";
+                File classFile = new File(context.getServiceJavaDir(),
+                        className + ".java");
+                if (!classFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(classFile, TEMPLATE_JAVA_PATH
+                            + "service/CrudTableService.vm", params);
+                }
             }
         }
 
@@ -288,56 +304,58 @@ public class CrudGenerator {
         }
 
         for (Table table : database.getTableList()) {
-            String propertyName = table.getPropertyName();
-            File jspDir = new File(context.getJspDir(), propertyName);
-            ResourceFileUtil.makeDir(jspDir);
+            if (!table.isIgnored()) {
+                String propertyName = table.getPropertyName();
+                File jspDir = new File(context.getJspDir(), propertyName);
+                ResourceFileUtil.makeDir(jspDir);
 
-            // crudTable/confirm.vm
-            File confirmJspFile = new File(jspDir, "confirm.jsp");
-            if (!confirmJspFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(confirmJspFile, TEMPLATE_JSP_PATH
-                        + "crudTable/confirm.vm", params);
-            }
+                // crudTable/confirm.vm
+                File confirmJspFile = new File(jspDir, "confirm.jsp");
+                if (!confirmJspFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(confirmJspFile, TEMPLATE_JSP_PATH
+                            + "crudTable/confirm.vm", params);
+                }
 
-            // crudTable/edit.vm
-            File editJspFile = new File(jspDir, "edit.jsp");
-            if (!editJspFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(editJspFile,
-                        TEMPLATE_JSP_PATH + "crudTable/edit.vm", params);
-            }
+                // crudTable/edit.vm
+                File editJspFile = new File(jspDir, "edit.jsp");
+                if (!editJspFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(editJspFile, TEMPLATE_JSP_PATH
+                            + "crudTable/edit.vm", params);
+                }
 
-            // crudTable/error.vm
-            File errorJspFile = new File(jspDir, "error.jsp");
-            if (!errorJspFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(errorJspFile, TEMPLATE_JSP_PATH
-                        + "crudTable/error.vm", params);
-            }
+                // crudTable/error.vm
+                File errorJspFile = new File(jspDir, "error.jsp");
+                if (!errorJspFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(errorJspFile, TEMPLATE_JSP_PATH
+                            + "crudTable/error.vm", params);
+                }
 
-            // crudTable/index.vm
-            File indexJspFile = new File(jspDir, "index.jsp");
-            if (!indexJspFile.exists()) {
-                // create
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("crudContext", context);
-                params.put("database", database);
-                params.put("table", table);
-                createFile(indexJspFile, TEMPLATE_JSP_PATH
-                        + "crudTable/index.vm", params);
+                // crudTable/index.vm
+                File indexJspFile = new File(jspDir, "index.jsp");
+                if (!indexJspFile.exists()) {
+                    // create
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("crudContext", context);
+                    params.put("database", database);
+                    params.put("table", table);
+                    createFile(indexJspFile, TEMPLATE_JSP_PATH
+                            + "crudTable/index.vm", params);
+                }
             }
         }
 
@@ -416,8 +434,9 @@ public class CrudGenerator {
                         isWrite = false;
                     } else if (line.contains("# CRUD PROPERTIES: END")) {
                         isWrite = true;
+                        line = null;
                     }
-                    if (isWrite) {
+                    if (isWrite && line != null) {
                         bw.write(line);
                         bw.newLine();
                     }

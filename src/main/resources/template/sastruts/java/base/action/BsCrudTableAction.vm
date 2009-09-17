@@ -18,6 +18,7 @@ import ${crudContext.servicePackage}.${table.className}Service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.seasar.framework.beans.util.Beans;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
@@ -67,8 +68,16 @@ public class Bs${table.className}Action implements Serializable {
     @Execute(validator = false, input = "error.jsp", urlPattern = "list/{pageNumber}")
     public String list() {
         // page navi
-        Beans.copy(${table.propertyName}Form, ${table.propertyName}Pager).includes("pageNumber")
-                .execute();
+        if (StringUtil.isNotBlank(${table.propertyName}Form.pageNumber)) {
+            try {
+                ${table.propertyName}Pager.setCurrentPageNumber(Integer
+                        .parseInt(${table.propertyName}Form.pageNumber));
+            } catch (NumberFormatException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Invalid value: " + ${table.propertyName}Form.pageNumber, e);
+                }
+            }
+        }
 
         return displayList(false);
     }
@@ -194,7 +203,7 @@ public class Bs${table.className}Action implements Serializable {
         try {
             ${table.className} ${table.propertyName} = create${table.className}();
             ${table.propertyName}Service.store(${table.propertyName});
-            SAStrutsUtil.addSessionMessage("success.crud_create_${table.propertyName}");
+            SAStrutsUtil.addSessionMessage("success.crud_create_crud_table");
 
             return displayList(true);
         } catch (ActionMessagesException e) {
@@ -206,7 +215,7 @@ public class Bs${table.className}Action implements Serializable {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ActionMessagesException(
-                    "errors.crud_failed_to_create_${table.propertyName}");
+                    "errors.crud_failed_to_create_crud_table");
         }
     }
 
@@ -215,7 +224,7 @@ public class Bs${table.className}Action implements Serializable {
         try {
             ${table.className} ${table.propertyName} = create${table.className}();
             ${table.propertyName}Service.store(${table.propertyName});
-            SAStrutsUtil.addSessionMessage("success.crud_update_${table.propertyName}");
+            SAStrutsUtil.addSessionMessage("success.crud_update_crud_table");
 
             return displayList(true);
         } catch (ActionMessagesException e) {
@@ -227,7 +236,7 @@ public class Bs${table.className}Action implements Serializable {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ActionMessagesException(
-                    "errors.crud_failed_to_update_${table.propertyName}");
+                    "errors.crud_failed_to_update_crud_table");
         }
     }
 
@@ -244,12 +253,12 @@ public class Bs${table.className}Action implements Serializable {
             if (${table.propertyName} == null) {
                 // throw an exception
                 throw new ActionMessagesException(
-                        "errors.crud_could_not_find_${table.propertyName}",
+                        "errors.crud_could_not_find_crud_table",
                         new Object[] { ${table.propertyName}Form.id });
             }
 
             ${table.propertyName}Service.delete(${table.propertyName});
-            SAStrutsUtil.addSessionMessage("success.crud_delete_${table.propertyName}");
+            SAStrutsUtil.addSessionMessage("success.crud_delete_crud_table");
 
             return displayList(true);
         } catch (ActionMessagesException e) {
@@ -261,17 +270,17 @@ public class Bs${table.className}Action implements Serializable {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ActionMessagesException(
-                    "errors.crud_failed_to_delete_${table.propertyName}");
+                    "errors.crud_failed_to_delete_crud_table");
         }
     }
 
-    private void load${table.className}() {
+    protected void load${table.className}() {
 
         ${table.className} ${table.propertyName} = ${table.propertyName}Service.get${table.className}(createKeyMap());
         if (${table.propertyName} == null) {
             // throw an exception
             throw new ActionMessagesException(
-                    "errors.crud_could_not_find_${table.propertyName}",
+                    "errors.crud_could_not_find_crud_table",
                     new Object[] { ${table.propertyName}Form.id });
         }
 
@@ -279,14 +288,14 @@ public class Bs${table.className}Action implements Serializable {
                 .execute();
     }
 
-    private ${table.className} create${table.className}() {
+    protected ${table.className} create${table.className}() {
         ${table.className} ${table.propertyName};
         if (${table.propertyName}Form.crudMode == CommonConstants.EDIT_MODE) {
             ${table.propertyName} = ${table.propertyName}Service.get${table.className}(createKeyMap());
             if (${table.propertyName} == null) {
                 // throw an exception
                 throw new ActionMessagesException(
-                        "errors.crud_could_not_find_${table.propertyName}",
+                        "errors.crud_could_not_find_crud_table",
                         new Object[] { ${table.propertyName}Form.id });
             }
         } else {
@@ -298,7 +307,7 @@ public class Bs${table.className}Action implements Serializable {
         return ${table.propertyName};
     }
 
-    private Map<String, String> createKeyMap() {
+    protected Map<String, String> createKeyMap() {
         Map<String, String> keys = new HashMap<String, String>();
 
         #*

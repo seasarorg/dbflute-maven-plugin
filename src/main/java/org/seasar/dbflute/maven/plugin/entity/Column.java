@@ -17,6 +17,7 @@ package org.seasar.dbflute.maven.plugin.entity;
 
 import java.io.Serializable;
 
+import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -48,6 +49,8 @@ public class Column implements Serializable {
     private String propertyName;
 
     private String methodName;
+
+    private Table table;
 
     public boolean isAutoIncrement() {
         return autoIncrement;
@@ -124,4 +127,69 @@ public class Column implements Serializable {
     public String getMethodName() {
         return methodName;
     }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    // meta properties
+
+    private String getColumnName() {
+        return table.getPropertyName() + "." + getPropertyName();
+    }
+
+    public String getAnnotation() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".annotation");
+    }
+
+    public String getRequiredParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".requiredParam");
+    }
+
+    public String getLongTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".longTypeParam");
+    }
+
+    public String getIntegerTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".integerTypeParam");
+    }
+
+    public String getShortTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".shortTypeParam");
+    }
+
+    public String getByteTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".byteTypeParam");
+    }
+
+    public String getFloatTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".floatTypeParam");
+    }
+
+    public String getDoubleTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".doubleTypeParam");
+    }
+
+    public String getDateTypeParam() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".dateTypeParam");
+    }
+
+    public String getDefaultValue() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".defaultValue");
+    }
+
 }

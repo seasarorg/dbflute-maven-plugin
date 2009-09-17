@@ -6,7 +6,7 @@ import java.util.List;
 public abstract class Bs${table.className}Pager implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public static final int DEFAULT_PAGE_SIZE = 50;
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
     public static final int DEFAULT_CURRENT_PAGE_NUMBER = 1;
 
