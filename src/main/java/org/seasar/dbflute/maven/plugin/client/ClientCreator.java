@@ -116,9 +116,18 @@ public class ClientCreator {
                 "torque.packageBase = ", context.getDatabase());
         File propertyFile = new File(context.getDbfluteClientDir(),
                 "build-dfclient.properties");
-        ResourceFileUtil.replaceContent(propertyFile, params);
-        propertyFile.renameTo(new File(context.getDbfluteClientDir(), "build-"
-                + context.getSchemaName() + ".properties"));
+        if (!propertyFile.exists()) {
+            // from 0.9.5.5            
+            propertyFile = new File(context.getDbfluteClientDir(),
+                    "build.properties");
+            ResourceFileUtil.replaceContent(propertyFile, params);
+            propertyFile.renameTo(new File(context.getDbfluteClientDir(),
+                    "build.properties"));
+        } else {
+            ResourceFileUtil.replaceContent(propertyFile, params);
+            propertyFile.renameTo(new File(context.getDbfluteClientDir(),
+                    "build-" + context.getSchemaName() + ".properties"));
+        }
 
         // dfprop/basicInfoMap.dfprop
         params.clear();

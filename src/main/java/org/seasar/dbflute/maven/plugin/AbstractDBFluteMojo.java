@@ -18,6 +18,8 @@ package org.seasar.dbflute.maven.plugin;
 import java.io.File;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.project.MavenProject;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * AbstractDBFluteMojo is a parent Mojo class for maven-dbflute-plugin.
@@ -26,6 +28,22 @@ import org.apache.maven.plugin.AbstractMojo;
  *
  */
 public abstract class AbstractDBFluteMojo extends AbstractMojo {
+    /**
+     * Project base directory (prepended for relative file paths).
+     *
+     * @parameter expression="${basedir}"
+     * @required
+     */
+    private File basedir;
+
+    /**
+     * The current Maven project.
+     *
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
+     */
+    private MavenProject project;
 
     /**
      * @parameter expression="${dbflute.schemaName}"
@@ -164,9 +182,9 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
     protected File mydbfluteDir;
 
     /**
-     * @parameter expression="${dbflute.dbfluteClientDir}" default-value="${basedir}/dbflute"
+     * @parameter expression="${dbflute.dbfluteClientDir}" default-value="${basedir}/dbflute_${project.artifactId}"
      */
-    protected File dbfluteClientDir;
+    private File dbfluteClientDir;
 
     public String getSchemaName() {
         return schemaName;
@@ -385,11 +403,35 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
     }
 
     public File getDbfluteClientDir() {
+        if (dbfluteClientDir == null) {
+            if (StringUtil.isBlank(schemaName)) {
+                dbfluteClientDir = new File(basedir, "dbflute_"
+                        + project.getArtifactId());
+            } else {
+                dbfluteClientDir = new File(basedir, "dbflute_" + schemaName);
+            }
+        }
         return dbfluteClientDir;
     }
 
     public void setDbfluteClientDir(File dbfluteClientDir) {
         this.dbfluteClientDir = dbfluteClientDir;
+    }
+
+    public File getBasedir() {
+        return basedir;
+    }
+
+    public void setBasedir(File basedir) {
+        this.basedir = basedir;
+    }
+
+    public MavenProject getProject() {
+        return project;
+    }
+
+    public void setProject(MavenProject project) {
+        this.project = project;
     }
 
 }
