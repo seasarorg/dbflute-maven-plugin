@@ -123,6 +123,8 @@ public class DBFluteContext {
 
     private String databasePassword;
 
+    private String enablePause;
+
     public InputStream getDownloadInputStream() throws MojoExecutionException {
         try {
             URL url = new URL(downloadPath);
@@ -569,5 +571,13 @@ public class DBFluteContext {
 
     public void setTargetContainer(String targetContainer) {
         this.targetContainer = targetContainer;
+    }
+
+    public String getEnablePause() {
+        return enablePause;
+    }
+
+    public void setEnablePause(String enablePause) {
+        this.enablePause = enablePause;
     }
 }

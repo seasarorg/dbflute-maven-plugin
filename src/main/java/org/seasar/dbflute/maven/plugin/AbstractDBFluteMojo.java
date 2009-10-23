@@ -186,6 +186,11 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
      */
     private File dbfluteClientDir;
 
+    /**
+     * @parameter expression="${dbflute.enablePause}" default-value="false"
+     */
+    protected String enablePause;
+
     public String getSchemaName() {
         return schemaName;
     }
@@ -432,6 +437,14 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
 
     public void setProject(MavenProject project) {
         this.project = project;
+    }
+
+    public String getEnablePause() {
+        return enablePause;
+    }
+
+    public void setEnablePause(String enablePause) {
+        this.enablePause = enablePause;
     }
 
 }

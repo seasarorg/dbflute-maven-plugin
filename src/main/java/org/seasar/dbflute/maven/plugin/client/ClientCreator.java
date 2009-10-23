@@ -18,6 +18,7 @@ package org.seasar.dbflute.maven.plugin.client;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,13 +87,26 @@ public class ClientCreator {
             throw new MojoFailureException("Missing schemaName.");
         }
 
-        // _project.sh
         Map<String, String> params = new HashMap<String, String>();
+        if ("false".equalsIgnoreCase(context.getEnablePause())) {
+            putParam(params, "pause", "rem ", "pause");
+            for (File batFile : dbfluteClientDir
+                    .listFiles(new FilenameFilter() {
+                        public boolean accept(File dir, String name) {
+                            return name.endsWith(".bat");
+                        }
+                    })) {
+                ResourceFileUtil.replaceContent(batFile, params);
+            }
+        }
+
+        // _project.sh
+        params.clear();
         putParam(params, "export MY_PROJECT_NAME=[^\r\n]+",
                 "export MY_PROJECT_NAME=", context.getSchemaName());
         putParam(params, "export DBFLUTE_HOME=../mydbflute/[^\r\n]+",
                 "export DBFLUTE_HOME=../mydbflute/", context.getDbfluteName());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
+        ResourceFileUtil.replaceContent(new File(dbfluteClientDir,
                 "_project.sh"), params);
 
         // _project.bat
@@ -102,7 +116,7 @@ public class ClientCreator {
         putParam(params, "set DBFLUTE_HOME=..\\\\mydbflute\\\\[^\r\n]+",
                 "set DBFLUTE_HOME=..\\\\mydbflute\\\\", context
                         .getDbfluteName());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
+        ResourceFileUtil.replaceContent(new File(dbfluteClientDir,
                 "_project.bat"), params);
 
         // build-dfclient.properties
@@ -114,19 +128,18 @@ public class ClientCreator {
                 context.getDatabase());
         putParam(params, "torque.packageBase *= *[^\r\n]+",
                 "torque.packageBase = ", context.getDatabase());
-        File propertyFile = new File(context.getDbfluteClientDir(),
+        File propertyFile = new File(dbfluteClientDir,
                 "build-dfclient.properties");
         if (!propertyFile.exists()) {
             // from 0.9.5.5            
-            propertyFile = new File(context.getDbfluteClientDir(),
-                    "build.properties");
+            propertyFile = new File(dbfluteClientDir, "build.properties");
             ResourceFileUtil.replaceContent(propertyFile, params);
-            propertyFile.renameTo(new File(context.getDbfluteClientDir(),
-                    "build.properties"));
+            propertyFile
+                    .renameTo(new File(dbfluteClientDir, "build.properties"));
         } else {
             ResourceFileUtil.replaceContent(propertyFile, params);
-            propertyFile.renameTo(new File(context.getDbfluteClientDir(),
-                    "build-" + context.getSchemaName() + ".properties"));
+            propertyFile.renameTo(new File(dbfluteClientDir, "build-"
+                    + context.getSchemaName() + ".properties"));
         }
 
         // dfprop/basicInfoMap.dfprop
@@ -139,7 +152,7 @@ public class ClientCreator {
                 "; targetContainer = ", context.getTargetContainer());
         putParam(params, "; packageBase *= *[^\r\n]+", "; packageBase = ",
                 context.getDbPackage());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
+        ResourceFileUtil.replaceContent(new File(dbfluteClientDir,
                 "dfprop/basicInfoMap.dfprop"), params);
 
         // dfprop/databaseInfoMap.dfprop
@@ -154,7 +167,7 @@ public class ClientCreator {
                 .getDatabaseUser());
         putParam(params, "; password *= *[^\r\n]+", "; password = ", context
                 .getDatabasePassword());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
+        ResourceFileUtil.replaceContent(new File(dbfluteClientDir,
                 "dfprop/databaseInfoMap.dfprop"), params);
 
     }
