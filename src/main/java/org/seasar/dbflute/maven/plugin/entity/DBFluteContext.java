@@ -130,8 +130,12 @@ public class DBFluteContext {
             URL url = new URL(downloadPath);
             return url.openStream();
         } catch (IOException e) {
-            throw new MojoExecutionException("Could not open a connection of "
-                    + downloadPath, e);
+            throw new MojoExecutionException(
+                    "Could not open a connection of "
+                            + downloadPath
+                            + "\n\nIf you want to use a proxy server,\n"
+                            + "run \"mvn dbflute:download -Dhttp.proxyHost=<hostname> -Dhttp.proxyPort=<port>\".",
+                    e);
         }
     }
 
