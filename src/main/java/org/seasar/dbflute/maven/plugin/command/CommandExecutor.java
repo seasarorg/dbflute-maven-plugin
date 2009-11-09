@@ -67,6 +67,7 @@ public class CommandExecutor {
             cmds.add("cmd.exe");
             cmds.add("/c");
             cmds.add(cmd + ".bat");
+            environment.put("pause_at_end", "n");
         } else {
             cmds.add("sh");
             cmds.add(cmd + ".sh");

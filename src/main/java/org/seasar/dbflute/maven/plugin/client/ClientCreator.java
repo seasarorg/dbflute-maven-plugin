@@ -89,14 +89,13 @@ public class ClientCreator {
 
         Map<String, String> params = new HashMap<String, String>();
         if ("false".equalsIgnoreCase(context.getEnablePause())) {
-            putParam(params, "pause", "rem ", "pause");
             for (File batFile : dbfluteClientDir
                     .listFiles(new FilenameFilter() {
                         public boolean accept(File dir, String name) {
                             return name.endsWith(".bat");
                         }
                     })) {
-                ResourceFileUtil.replaceContent(batFile, params);
+                ResourceFileUtil.replaceContent(batFile, params, true);
             }
         }
 

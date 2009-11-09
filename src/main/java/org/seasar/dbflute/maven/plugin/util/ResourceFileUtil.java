@@ -135,6 +135,11 @@ public class ResourceFileUtil {
 
     public static void replaceContent(File file, Map<String, String> params)
             throws MojoExecutionException {
+        replaceContent(file, params, false);
+    }
+
+    public static void replaceContent(File file, Map<String, String> params,
+            boolean replacedPause) throws MojoExecutionException {
         if (!file.exists()) {
             LogUtil.getLog().info(
                     file.getAbsolutePath()
@@ -148,6 +153,18 @@ public class ResourceFileUtil {
             String content = new String(FileUtil.getBytes(file), "UTF-8");
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 content = content.replaceAll(entry.getKey(), entry.getValue());
+            }
+            if (replacedPause) {
+                int pos = content.indexOf("pause_at_end");
+                if (pos == -1) {
+                    content = content
+                            .replaceAll("pause\r\n",
+                                    "if \"%pause_at_end%\"==\"y\" (\r\n  pause\r\n)\r\n");
+                    if ("_project.bat".equals(file.getName())) {
+                        content = content
+                                + "\r\n\r\nif \"%pause_at_end%\"==\"\" set pause_at_end=y\r\n";
+                    }
+                }
             }
             writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(content);
