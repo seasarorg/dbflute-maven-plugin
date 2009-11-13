@@ -182,7 +182,7 @@ public abstract class AbstractDBFluteMojo extends AbstractMojo {
     protected File mydbfluteDir;
 
     /**
-     * @parameter expression="${dbflute.dbfluteClientDir}" default-value="${basedir}/dbflute_${project.artifactId}"
+     * @parameter expression="${dbflute.dbfluteClientDir}" 
      */
     private File dbfluteClientDir;
 
