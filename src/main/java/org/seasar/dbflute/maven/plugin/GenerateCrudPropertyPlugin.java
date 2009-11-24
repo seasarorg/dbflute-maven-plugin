@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.crud.CrudGenerator;
+import org.seasar.dbflute.maven.plugin.crud.CrudPropertyGenerator;
 import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
@@ -28,14 +28,14 @@ import org.seasar.framework.beans.util.Beans;
 /**
  * GenerateCrudPlugin provides generate-crud goal to generate CRUD pages.
  * 
- * @goal generate-crud
+ * @goal generate-crud-tablemeta
  * 
  * @execute phase="generate-resources"
  * 
  * @author shinsuke
  * 
  */
-public class GenerateCrudPlugin extends AbstractDBFluteMojo {
+public class GenerateCrudPropertyPlugin extends AbstractDBFluteMojo {
     /**
      * @parameter expression="${dbflute.tableMetaProperties}" default-value="${basedir}/src/main/config/tablemeta.properties"
      */
@@ -49,7 +49,8 @@ public class GenerateCrudPlugin extends AbstractDBFluteMojo {
                 .createAndCopy(DBFluteContext.class, this).excludesNull()
                 .execute();
         context.buildCrudPackage();
-        CrudGenerator generator = new CrudGenerator(schemaFile, context);
+        CrudPropertyGenerator generator = new CrudPropertyGenerator(schemaFile,
+                tableMetaProperties, context);
         generator.execute();
     }
 

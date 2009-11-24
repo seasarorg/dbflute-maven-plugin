@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author shinsuke
@@ -29,17 +31,25 @@ public class TableMetaPropertiesUtil {
     private static Properties tableMetaProperties;
 
     public static String getProperty(String key) {
-        return tableMetaProperties.getProperty(key);
+        String value = tableMetaProperties.getProperty(key);
+        if (StringUtil.isEmpty(value)) {
+            return null;
+        }
+        return value;
     }
 
     public static void init(File file) throws MojoExecutionException {
         TableMetaPropertiesUtil.tableMetaProperties = new Properties();
         if (file != null && file.exists()) {
+            FileInputStream fis = null;
             try {
-                tableMetaProperties.load(new FileInputStream(file));
+                fis = new FileInputStream(file);
+                tableMetaProperties.load(fis);
             } catch (Exception e) {
                 throw new MojoExecutionException(file.getAbsolutePath()
                         + " is not found.", e);
+            } finally {
+                IOUtils.closeQuietly(fis);
             }
         }
 

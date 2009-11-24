@@ -73,6 +73,9 @@ ${column.requiredParam}
     #if(${column.javaType} == "Double")@DoubleType#if(${column.doubleTypeParam})${column.doubleTypeParam}#end#end##
     #if(${column.javaType} == "java.sql.Timestamp")@DateType#if(${column.dateTypeParam})${column.dateTypeParam}#end#end##
   #end##
+  #if(${column.additionalAnnotation})##
+    ${column.additionalAnnotation}
+  #end##
     public String ${column.propertyName};
 #end
        

@@ -192,4 +192,8 @@ public class Column implements Serializable {
                 + ".defaultValue");
     }
 
+    public String getAdditionalAnnotation() {
+        return TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".additionalAnnotation");
+    }
 }

@@ -29,8 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -52,16 +50,13 @@ import org.seasar.framework.util.ResourceUtil;
  * @author shinsuke
  *
  */
-public class CrudGenerator {
+public class CrudGenerator extends AbstractCrudGenerator {
     private static final String TEMPLATE_JAVA_PATH = "template/sastruts/java/";
 
     private static final String TEMPLATE_RESOURCE_PATH = "template/sastruts/resources/";
 
     private static final String TEMPLATE_JSP_PATH = "template/sastruts/webapp/WEB-INF/view/";
 
-    private File schemaFile;
-
-    private DBFluteContext context;
 
     public CrudGenerator(File schemaFile, DBFluteContext context) {
         this.schemaFile = schemaFile;
@@ -441,7 +436,6 @@ public class CrudGenerator {
                         bw.newLine();
                     }
                 }
-                bw.newLine();
                 bw.flush();
 
                 while ((line = bbr.readLine()) != null) {
@@ -500,20 +494,6 @@ public class CrudGenerator {
                 } catch (IOException e) {
                 }
             }
-        }
-    }
-
-    protected Database getDatabaseModel() throws MojoExecutionException,
-            MojoFailureException {
-        DBSchemaHandler handler = new DBSchemaHandler();
-        SAXParserFactory spfactory = SAXParserFactory.newInstance();
-        try {
-            SAXParser parser = spfactory.newSAXParser();
-            parser.parse(schemaFile, handler);
-            return handler.getDatabase();
-        } catch (Exception e) {
-            throw new MojoExecutionException(
-                    "Could not create Database instance.", e);
         }
     }
 }
