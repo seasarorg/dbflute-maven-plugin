@@ -152,6 +152,15 @@ public class Column implements Serializable {
                 + ".requiredParam");
     }
 
+    public boolean isEnableJavaType() {
+        String value = TableMetaPropertiesUtil.getProperty(getColumnName()
+                + ".enableJavaType");
+        if (value != null && "false".equalsIgnoreCase(value)) {
+            return false;
+        }
+        return true;
+    }
+
     public String getLongTypeParam() {
         return TableMetaPropertiesUtil.getProperty(getColumnName()
                 + ".longTypeParam");

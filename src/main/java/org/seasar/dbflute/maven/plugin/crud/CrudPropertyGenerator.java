@@ -90,7 +90,7 @@ public class CrudPropertyGenerator extends AbstractCrudGenerator {
                 String tableKeyPrefix = table.getPropertyName() + ".";
                 String ignored = writeProperty(writer, tableKeyPrefix,
                         "ignored", "false");
-                if ("true".equalsIgnoreCase(ignored)) {
+                if (!"true".equalsIgnoreCase(ignored)) {
                     writeProperty(writer, tableKeyPrefix, "importPackages", "");
                     for (Column column : table.getColumnList()) {
                         String columnKeyPrefix = tableKeyPrefix
@@ -100,6 +100,8 @@ public class CrudPropertyGenerator extends AbstractCrudGenerator {
                         writeProperty(writer, columnKeyPrefix,
                                 "additionalAnnotation", "");
                         writeProperty(writer, columnKeyPrefix, "annotation", "");
+                        writeProperty(writer, columnKeyPrefix,
+                                "enableJavaType", "true");
                         writeProperty(writer, columnKeyPrefix, "longTypeParam",
                                 "");
                         writeProperty(writer, columnKeyPrefix,

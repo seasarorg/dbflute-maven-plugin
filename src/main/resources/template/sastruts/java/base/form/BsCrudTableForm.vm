@@ -65,13 +65,15 @@ ${column.requiredParam}
         #end##
       #end##
     #end##
-    #if(${column.javaType} == "Long")@LongType#if(${column.longTypeParam})${column.longTypeParam}#end#end##
-    #if(${column.javaType} == "Integer")@IntegerType#if(${column.integerTypeParam})${column.integerTypeParam}#end#end##
-    #if(${column.javaType} == "Short")@ShortType#if(${column.shortTypeParam})${column.shortTypeParam}#end#end##
-    #if(${column.javaType} == "Byte")@ByteType#if(${column.byteTypeParam})${column.byteTypeParam}#end#end##
-    #if(${column.javaType} == "Float")@FloatType#if(${column.floatTypeParam})${column.floatTypeParam}#end#end##
-    #if(${column.javaType} == "Double")@DoubleType#if(${column.doubleTypeParam})${column.doubleTypeParam}#end#end##
-    #if(${column.javaType} == "java.sql.Timestamp")@DateType#if(${column.dateTypeParam})${column.dateTypeParam}#end#end##
+    #if(${column.enableJavaType})##
+      #if(${column.javaType} == "Long")@LongType#if(${column.longTypeParam})${column.longTypeParam}#end#end##
+      #if(${column.javaType} == "Integer")@IntegerType#if(${column.integerTypeParam})${column.integerTypeParam}#end#end##
+      #if(${column.javaType} == "Short")@ShortType#if(${column.shortTypeParam})${column.shortTypeParam}#end#end##
+      #if(${column.javaType} == "Byte")@ByteType#if(${column.byteTypeParam})${column.byteTypeParam}#end#end##
+      #if(${column.javaType} == "Float")@FloatType#if(${column.floatTypeParam})${column.floatTypeParam}#end#end##
+      #if(${column.javaType} == "Double")@DoubleType#if(${column.doubleTypeParam})${column.doubleTypeParam}#end#end##
+      #if(${column.javaType} == "java.sql.Timestamp")@DateType#if(${column.dateTypeParam})${column.dateTypeParam}#end#end##
+    #end##
   #end##
   #if(${column.additionalAnnotation})##
     ${column.additionalAnnotation}
