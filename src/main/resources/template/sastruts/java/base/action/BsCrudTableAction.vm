@@ -254,7 +254,12 @@ public class Bs${table.className}Action implements Serializable {
                 // throw an exception
                 throw new ActionMessagesException(
                         "errors.crud_could_not_find_crud_table",
+    #*
                         new Object[] { ${table.propertyName}Form.id });
+    *#
+    
+                        new Object[] { "${table.primaryKeyPath}" });
+       
             }
 
             ${table.propertyName}Service.delete(${table.propertyName});
@@ -281,7 +286,12 @@ public class Bs${table.className}Action implements Serializable {
             // throw an exception
             throw new ActionMessagesException(
                     "errors.crud_could_not_find_crud_table",
+    #*
                     new Object[] { ${table.propertyName}Form.id });
+    *#
+    
+                    new Object[] { "${table.primaryKeyPath}" });
+       
         }
 
         Beans.copy(${table.propertyName}, ${table.propertyName}Form).excludes("searchParams", "mode")
@@ -296,7 +306,12 @@ public class Bs${table.className}Action implements Serializable {
                 // throw an exception
                 throw new ActionMessagesException(
                         "errors.crud_could_not_find_crud_table",
+    #*
                         new Object[] { ${table.propertyName}Form.id });
+    *#
+    
+                        new Object[] { "${table.primaryKeyPath}" });
+       
             }
         } else {
             ${table.propertyName} = new ${table.className}();
