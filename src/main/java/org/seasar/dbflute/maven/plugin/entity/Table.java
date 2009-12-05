@@ -115,4 +115,14 @@ public class Table implements Serializable {
         return TableMetaPropertiesUtil.getProperty(getPropertyName()
                 + ".importPackages");
     }
+
+    public List<String> getPrimaryKeyList() {
+        List<String> primaryKeyList = new ArrayList<String>();
+        for (Column column : columnList) {
+            if (column.isPrimaryKey()) {
+                primaryKeyList.add(column.getPropertyName());
+            }
+        }
+        return primaryKeyList;
+    }
 }

@@ -258,7 +258,17 @@ public class Bs${table.className}Action implements Serializable {
                         new Object[] { ${table.propertyName}Form.id });
     *#
     
-                        new Object[] { "${table.primaryKeyPath}" });
+                        new Object[] {##
+        #set( $separatorFlag = "false" )##
+        #foreach( $pKey in ${table.getPrimaryKeyList()} )##
+          #if(${separatorFlag} == "true")##
+                        + ", " +
+          #else##
+            #set( $separatorFlag = "true" )##
+          #end##
+                        ${table.propertyName}Form.${pKey}
+        #end##
+                        });
        
             }
 
@@ -290,7 +300,17 @@ public class Bs${table.className}Action implements Serializable {
                     new Object[] { ${table.propertyName}Form.id });
     *#
     
-                    new Object[] { "${table.primaryKeyPath}" });
+                    new Object[] {##
+        #set( $separatorFlag = "false" )##
+        #foreach( $pKey in ${table.getPrimaryKeyList()} )##
+          #if(${separatorFlag} == "true")##
+                        + ", " +
+          #else##
+            #set( $separatorFlag = "true" )##
+          #end##
+                        ${table.propertyName}Form.${pKey}
+        #end##
+                        });
        
         }
 
@@ -310,7 +330,17 @@ public class Bs${table.className}Action implements Serializable {
                         new Object[] { ${table.propertyName}Form.id });
     *#
     
-                        new Object[] { "${table.primaryKeyPath}" });
+                        new Object[] {##
+        #set( $separatorFlag = "false" )##
+        #foreach( $pKey in ${table.getPrimaryKeyList()} )##
+          #if(${separatorFlag} == "true")##
+                        + ", " +
+          #else##
+            #set( $separatorFlag = "true" )##
+          #end##
+                        ${table.propertyName}Form.${pKey}
+        #end##
+                        });
        
             }
         } else {
