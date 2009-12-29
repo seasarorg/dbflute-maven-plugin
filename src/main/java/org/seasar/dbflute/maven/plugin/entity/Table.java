@@ -116,6 +116,26 @@ public class Table implements Serializable {
                 + ".importPackages");
     }
 
+    public String getConverterToSearchParams() {
+        return TableMetaPropertiesUtil.getProperty(getPropertyName()
+                + ".converterToSearchParams");
+    }
+
+    public String getConverterToPager() {
+        return TableMetaPropertiesUtil.getProperty(getPropertyName()
+                + ".converterToPager");
+    }
+
+    public String getConverterToActionForm() {
+        return TableMetaPropertiesUtil.getProperty(getPropertyName()
+                + ".converterToActionForm");
+    }
+
+    public String getConverterToEntity() {
+        return TableMetaPropertiesUtil.getProperty(getPropertyName()
+                + ".converterToEntity");
+    }
+
     public List<String> getPrimaryKeyList() {
         List<String> primaryKeyList = new ArrayList<String>();
         for (Column column : columnList) {

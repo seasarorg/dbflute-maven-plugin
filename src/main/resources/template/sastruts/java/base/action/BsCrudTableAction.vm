@@ -50,8 +50,12 @@ public class Bs${table.className}Action implements Serializable {
         ${table.propertyName}Items = ${table.propertyName}Service.get${table.className}List(${table.propertyName}Pager);
 
         // restore from pager
-        Beans.copy(${table.propertyName}Pager, ${table.propertyName}Form.searchParams).excludes(
-                CommonConstants.PAGER_CONVERSION_RULE).execute();
+        Beans.copy(${table.propertyName}Pager, ${table.propertyName}Form.searchParams)
+            .excludes(CommonConstants.PAGER_CONVERSION_RULE)
+    
+            #if(${table.converterToSearchParams})${table.converterToSearchParams}#end##
+       
+            .execute();
 
         if (redirect) {
             return "index?redirect=true";
@@ -85,7 +89,11 @@ public class Bs${table.className}Action implements Serializable {
     @Execute(validator = false, input = "error.jsp")
     public String search() {
         Beans.copy(${table.propertyName}Form.searchParams, ${table.propertyName}Pager).excludes(
-                CommonConstants.PAGER_CONVERSION_RULE).execute();
+                CommonConstants.PAGER_CONVERSION_RULE)
+    
+            #if(${table.converterToPager})${table.converterToPager}#end##
+       
+                .execute();
 
         return displayList(false);
     }
@@ -315,6 +323,9 @@ public class Bs${table.className}Action implements Serializable {
         }
 
         Beans.copy(${table.propertyName}, ${table.propertyName}Form).excludes("searchParams", "mode")
+    
+            #if(${table.converterToActionForm})${table.converterToActionForm}#end##
+       
                 .execute();
     }
 
@@ -347,6 +358,9 @@ public class Bs${table.className}Action implements Serializable {
             ${table.propertyName} = new ${table.className}();
         }
         Beans.copy(${table.propertyName}Form, ${table.propertyName}).excludes("searchParams", "mode")
+    
+            #if(${table.converterToEntity})${table.converterToEntity}#end##
+       
                 .execute();
 
         return ${table.propertyName};

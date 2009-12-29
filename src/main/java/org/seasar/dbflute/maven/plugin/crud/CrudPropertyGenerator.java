@@ -92,6 +92,14 @@ public class CrudPropertyGenerator extends AbstractCrudGenerator {
                         "ignored", "false");
                 if (!"true".equalsIgnoreCase(ignored)) {
                     writeProperty(writer, tableKeyPrefix, "importPackages", "");
+                    writeProperty(writer, tableKeyPrefix,
+                            "converterToSearchParams", "");
+                    writeProperty(writer, tableKeyPrefix, "converterToPager",
+                            "");
+                    writeProperty(writer, tableKeyPrefix,
+                            "converterToActionForm", "");
+                    writeProperty(writer, tableKeyPrefix, "converterToEntity",
+                            "");
                     for (Column column : table.getColumnList()) {
                         String columnKeyPrefix = tableKeyPrefix
                                 + column.getPropertyName() + ".";
