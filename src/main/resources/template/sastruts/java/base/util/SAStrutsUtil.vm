@@ -18,6 +18,17 @@ public class SAStrutsUtil {
         ActionMessagesUtil.saveMessages(request, msgs);
     }
 
+    public static void addMessage(String key, Object... values) {
+        addMessage(RequestUtil.getRequest(), key, values);
+    }
+
+    public static void addMessage(HttpServletRequest request, String key,
+            Object... values) {
+        ActionMessages msgs = new ActionMessages();
+        msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(key, values));
+        ActionMessagesUtil.saveMessages(request, msgs);
+    }
+
     public static void addSessionMessage(String key) {
         addSessionMessage(RequestUtil.getRequest(), key);
     }
@@ -28,4 +39,14 @@ public class SAStrutsUtil {
         ActionMessagesUtil.saveMessages(request.getSession(), msgs);
     }
 
+    public static void addSessionMessage(String key, Object... values) {
+        addSessionMessage(RequestUtil.getRequest(), key, values);
+    }
+
+    public static void addSessionMessage(HttpServletRequest request,
+            String key, Object... values) {
+        ActionMessages msgs = new ActionMessages();
+        msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(key, values));
+        ActionMessagesUtil.saveMessages(request.getSession(), msgs);
+    }
 }
