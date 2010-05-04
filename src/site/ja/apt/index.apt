@@ -1,0 +1,92 @@
+               ------------------
+                      概要
+               ------------------
+                Shinsuke Sugaya
+               ------------------
+                   2010-05-04
+
+Maven DBFlute Plugin とは
+
+    Maven DBFlute Plugin は Apache Maven 2.x で利用可能なプラグインです。 Maven DBFlute Plugin を利用することで、DBFlute のセットアップなどの処理を Maven の mvn コマンドを通して実行することができます。
+
+* ゴール一覧
+
+    Maven DBFlute Plugin では、以下のゴールを提供します。
+
+    * <<download>>: 指定されたバージョンをダウンロードして、展開します。
+
+    * <<create-client>>: ダウンロードした、指定したバージョンのdbflute_dfclient.zipを展開して、データベースのパラメータなどを更新します。
+
+    * <<upgrade>>: 指定されたバージョンをダウンロードして、展開し、_project.[sh|bat]を更新します。
+
+    * <<jdbc>>: jdbc.[sh|bat]を実行します。
+
+    * <<generate>>: generate.[sh|bat]を実行します。
+
+    * <<doc>>: doc.[sh|bat]を実行します。
+
+    * <<outside-sql-test>>: outside-sql-test.[sh|bat]を実行します。
+
+    * <<replace-schema>>: replace-schema.[sh|bat]を実行します。
+
+    * <<sql2entity>>: sql2entity.[sh|bat]を実行します。
+
+    * <<generate-crud>>: テーブルごとにSAStrutsのCRUDページを生成します。
+
+    * <<generate-crud-tablemeta>>: generate-crud の実行時に渡すパラメータのプロパティファイルを生成します。
+
+    []
+
+* 使用方法
+
+    Maven DBFlute Plugin で提供しているゴールは、mvn コマンドで指定して実行します。 プラグインを利用するためには、利用するプロジェクトの pom.xml に以下のように記述しておきます。
+
+--------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+...
+  <pluginRepositories>
+    <pluginRepository>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>maven-snapshot.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2-snapshot/</url>
+    </pluginRepository>
+  </pluginRepositories>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>org.seasar.dbflute</groupId>
+        <artifactId>maven-dbflute-plugin</artifactId>
+        <version>0.1.0</version>
+        <configuration>
+          <dbfluteVersion>0.9.5.2</dbfluteVersion>
+          <rootPackage>sample.app</rootPackage>
+          <dbPackage>sample.app.db</dbPackage>
+          <schemaName>sample</schemaName>
+          <!-- DBFluteクライアントの場所を変えたい場合に記述 -->
+          <!-- dbfluteClientDir>${basedir}/dbflute</dbfluteClientDir -->
+          <schemaFile>${basedir}/dbflute/schema/project-schema-sample.xml</schemaFile>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+--------------------------------------------
+
+    たとえば、download ゴールは以下のように実行します。
+
+--------------------------------------------
+mvn dbflute:download
+--------------------------------------------
+
+    基本的な利用方法については、{{{usage.html}こちら}}を参照してください。 
+
