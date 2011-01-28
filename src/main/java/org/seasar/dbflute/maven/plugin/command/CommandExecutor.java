@@ -69,7 +69,7 @@ public class CommandExecutor {
             cmds.add(cmd + ".bat");
             environment.put("pause_at_end", "n");
         } else {
-            cmds.add("sh");
+            cmds.add("/bin/bash");
             cmds.add(cmd + ".sh");
         }
         // TODO Mac?
