@@ -24,8 +24,6 @@ import org.seasar.util.lang.StringUtil;
 /**
  * CommandPlugin is an abstract class for command plugins.
  * 
- * @goal doc
- * 
  * @author shinsuke
  *
  */
