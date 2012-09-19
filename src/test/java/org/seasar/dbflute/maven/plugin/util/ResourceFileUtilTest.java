@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.seasar.framework.util.ResourceUtil;
+import org.seasar.util.io.ResourceUtil;
 
 public class ResourceFileUtilTest extends AbstractMojoTestCase {
 

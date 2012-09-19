@@ -20,9 +20,7 @@ import java.io.IOException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.seasar.dbflute.maven.plugin.command.CommandExecutor;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
-import org.seasar.framework.beans.util.Beans;
 
 /**
  * ReplaceSchemaCommandPlugin provides replace-schema goal to run replace-schema.[sh|bat].
@@ -32,7 +30,7 @@ import org.seasar.framework.beans.util.Beans;
  * @author shinsuke
  *
  */
-public class ReplaceSchemaCommandPlugin extends AbstractDBFluteMojo {
+public class ReplaceSchemaCommandPlugin extends CommandPlugin {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
@@ -46,10 +44,7 @@ public class ReplaceSchemaCommandPlugin extends AbstractDBFluteMojo {
             throw new MojoExecutionException("I/O error.", e);
         }
         if (input == 'y' || input == 'Y') {
-            DBFluteContext context = Beans.createAndCopy(DBFluteContext.class,
-                    this).excludesNull().execute();
-
-            CommandExecutor creator = new CommandExecutor(context);
+            CommandExecutor creator = new CommandExecutor(this);
             creator.environment.put("answer", "y");
             creator.execute("replace-schema");
         }

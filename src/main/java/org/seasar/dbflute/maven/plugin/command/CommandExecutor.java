@@ -33,7 +33,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
+import org.seasar.dbflute.maven.plugin.CommandPlugin;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.SystemUtil;
 
@@ -44,17 +44,17 @@ import org.seasar.dbflute.maven.plugin.util.SystemUtil;
  *
  */
 public class CommandExecutor {
-    protected DBFluteContext context;
+    protected CommandPlugin plugin;
 
     public Map<String, String> environment = new HashMap<String, String>();
 
-    public CommandExecutor(DBFluteContext context) {
-        this.context = context;
+    public CommandExecutor(CommandPlugin context) {
+        this.plugin = context;
     }
 
     public void execute(String cmd) throws MojoExecutionException,
             MojoFailureException {
-        File dbfluteClientDir = context.getDbfluteClientDir();
+        File dbfluteClientDir = plugin.getDbfluteClientDir();
         if (!dbfluteClientDir.isDirectory()) {
             LogUtil.getLog().info(
                     "Create dbflute client directory. "
@@ -82,8 +82,8 @@ public class CommandExecutor {
         }
         Process process;
         try {
-            process = builder.directory(dbfluteClientDir).redirectErrorStream(
-                    true).start();
+            process = builder.directory(dbfluteClientDir)
+                    .redirectErrorStream(true).start();
         } catch (IOException e) {
             throw new MojoExecutionException("Could not run the command.", e);
         }

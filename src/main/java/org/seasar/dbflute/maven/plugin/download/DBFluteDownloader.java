@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
+import org.seasar.dbflute.maven.plugin.DownloadPlugin;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
 
@@ -30,18 +30,17 @@ import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
  *
  */
 public class DBFluteDownloader {
-    protected DBFluteContext context;
+    protected DownloadPlugin plugin;
 
-    public DBFluteDownloader(DBFluteContext context) {
-        this.context = context;
+    public DBFluteDownloader(DownloadPlugin plugin) {
+        this.plugin = plugin;
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        File dbfluteDir = context.getDbfluteDir();
+        File dbfluteDir = plugin.getDbfluteDir();
         if (!dbfluteDir.exists()) {
             LogUtil.getLog().info("Creating " + dbfluteDir.getAbsolutePath());
-            ResourceFileUtil
-                    .unzip(context.getDownloadInputStream(), dbfluteDir);
+            ResourceFileUtil.unzip(plugin.getDownloadInputStream(), dbfluteDir);
         }
 
     }

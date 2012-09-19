@@ -19,14 +19,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
+import org.seasar.dbflute.maven.plugin.UpgradePlugin;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
 
@@ -37,30 +39,35 @@ import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
  *
  */
 public class DBFluteUpgrader {
-    protected DBFluteContext context;
+    protected UpgradePlugin plugin;
 
-    public DBFluteUpgrader(DBFluteContext context) {
-        this.context = context;
+    public DBFluteUpgrader(UpgradePlugin context) {
+        this.plugin = context;
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        File dbfluteDir = context.getDbfluteDir();
-        File dbfluteClientDir = context.getDbfluteClientDir();
+        File dbfluteDir = plugin.getDbfluteDir();
+        File dbfluteClientDir = plugin.getDbfluteClientDir();
         if (!dbfluteClientDir.isDirectory()) {
             throw new MojoFailureException(dbfluteClientDir.getAbsolutePath()
                     + " does not exist.");
         }
 
         // Check schemaName
-        if (StringUtils.isBlank(context.getSchemaName())) {
+        if (StringUtils.isBlank(plugin.getSchemaName())) {
             throw new MojoFailureException("Missing schemaName.");
         }
 
         if (!dbfluteDir.exists()) {
             LogUtil.getLog().info("Creating " + dbfluteDir.getAbsolutePath());
-            ResourceFileUtil
-                    .unzip(context.getDownloadInputStream(), dbfluteDir);
+            InputStream in = null;
+            try {
+                in = plugin.getDownloadInputStream();
+                ResourceFileUtil.unzip(in, dbfluteDir);
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
         }
 
         LogUtil.getLog().info("Creating " + dbfluteClientDir.getAbsolutePath());
@@ -108,20 +115,19 @@ public class DBFluteUpgrader {
         // _project.sh
         Map<String, String> params = new HashMap<String, String>();
         putParam(params, "export MY_PROJECT_NAME=[^\r\n]+",
-                "export MY_PROJECT_NAME=", context.getSchemaName());
+                "export MY_PROJECT_NAME=", plugin.getSchemaName());
         putParam(params, "export DBFLUTE_HOME=../mydbflute/[^\r\n]+",
-                "export DBFLUTE_HOME=../mydbflute/", context.getDbfluteName());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
+                "export DBFLUTE_HOME=../mydbflute/", plugin.getDbfluteName());
+        ResourceFileUtil.replaceContent(new File(plugin.getDbfluteClientDir(),
                 "_project.sh"), params);
 
         // _project.bat
         params.clear();
         putParam(params, "set MY_PROJECT_NAME=[^\r\n]+",
-                "set MY_PROJECT_NAME=", context.getSchemaName());
+                "set MY_PROJECT_NAME=", plugin.getSchemaName());
         putParam(params, "set DBFLUTE_HOME=..\\\\mydbflute\\\\[^\r\n]+",
-                "set DBFLUTE_HOME=..\\\\mydbflute\\\\", context
-                        .getDbfluteName());
-        ResourceFileUtil.replaceContent(new File(context.getDbfluteClientDir(),
+                "set DBFLUTE_HOME=..\\\\mydbflute\\\\", plugin.getDbfluteName());
+        ResourceFileUtil.replaceContent(new File(plugin.getDbfluteClientDir(),
                 "_project.bat"), params);
     }
 

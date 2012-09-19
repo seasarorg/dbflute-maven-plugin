@@ -18,7 +18,7 @@ package org.seasar.dbflute.maven.plugin.entity;
 import java.io.Serializable;
 
 import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
-import org.seasar.framework.util.StringUtil;
+import org.seasar.util.lang.StringUtil;
 
 /**
  * Column is an entity class for column tag in a project schema file.

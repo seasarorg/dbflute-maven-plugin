@@ -18,9 +18,7 @@ package org.seasar.dbflute.maven.plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.seasar.dbflute.maven.plugin.command.CommandExecutor;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
-import org.seasar.framework.beans.util.Beans;
 
 /**
  * JdbcCommandPlugin provides jdbc goal to run jdbc.[sh|bat].
@@ -30,16 +28,12 @@ import org.seasar.framework.beans.util.Beans;
  * @author shinsuke
  *
  */
-public class JdbcCommandPlugin extends AbstractDBFluteMojo {
+public class JdbcCommandPlugin extends CommandPlugin {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
 
-        DBFluteContext context = Beans
-                .createAndCopy(DBFluteContext.class, this).excludesNull()
-                .execute();
-
-        CommandExecutor creator = new CommandExecutor(context);
+        CommandExecutor creator = new CommandExecutor(this);
         creator.execute("jdbc");
     }
 

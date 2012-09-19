@@ -22,7 +22,7 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 public class GenerateCrudPluginTest extends AbstractMojoTestCase {
     public void test_parameter() throws Exception {
         File testPom = new File(getBasedir(), "src/test/resources/poms/pom.xml");
-        AbstractDBFluteMojo mojo = (AbstractDBFluteMojo) lookupMojo(
+        GenerateCrudPlugin mojo = (GenerateCrudPlugin) lookupMojo(
                 "generate-crud", testPom);
         String rootPackage = (String) getVariableValueFromObject(mojo,
                 "rootPackage");

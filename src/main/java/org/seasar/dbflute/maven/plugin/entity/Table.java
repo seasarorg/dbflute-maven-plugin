@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
-import org.seasar.framework.util.StringUtil;
+import org.seasar.util.lang.StringUtil;
 
 /**
  * Table is an entity class for table tag in a project schema file.

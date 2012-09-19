@@ -22,7 +22,7 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 public class DownloadPluginTest extends AbstractMojoTestCase {
     public void test_parameter() throws Exception {
         File testPom = new File(getBasedir(), "src/test/resources/poms/pom.xml");
-        AbstractDBFluteMojo mojo = (AbstractDBFluteMojo) lookupMojo("download",
+        DownloadPlugin mojo = (DownloadPlugin) lookupMojo("download",
                 testPom);
         String version = (String) getVariableValueFromObject(mojo,
                 "dbfluteVersion");

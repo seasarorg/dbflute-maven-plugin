@@ -15,13 +15,17 @@
  */
 package org.seasar.dbflute.maven.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.upgrade.DBFluteUpgrader;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
-import org.seasar.framework.beans.util.Beans;
 
 /**
  * UpgradePlugin provides upgrade goal to download a zip file of dbflute and replace _project.*.
@@ -31,7 +35,47 @@ import org.seasar.framework.beans.util.Beans;
  * @author shinsuke
  *
  */
-public class UpgradePlugin extends AbstractDBFluteMojo {
+public class UpgradePlugin extends AbstractMojo {
+
+    /**
+     * @parameter expression="${dbflute.version}" 
+     */
+    protected String dbfluteVersion;
+
+    /**
+     * @parameter expression="${dbflute.downloadFilePrefix}" default-value="dbflute-"
+     */
+    protected String downloadFilePrefix;
+
+    // TODO default url
+    /**
+     * @parameter expression="${dbflute.downloadDirUrl}" default-value="http://dbflute.sandbox.seasar.org/download/dbflute/"
+     */
+    protected String downloadDirUrl;
+
+    /**
+     * @parameter expression="${dbflute.downloadFileExtension}" default-value=".zip"
+     */
+    protected String downloadFileExtension;
+
+    /**
+     * @parameter expression="${dbflute.mydbfluteDir}" default-value="${basedir}/mydbflute"
+     */
+    protected File mydbfluteDir;
+
+    /**
+     * @parameter expression="${dbflute.dbfluteClientDir}" 
+     */
+    private File dbfluteClientDir;
+
+    /**
+     * @parameter expression="${dbflute.schemaName}"
+     */
+    protected String schemaName;
+
+    private String dbfluteName;
+
+    private String downloadPath;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
@@ -40,17 +84,40 @@ public class UpgradePlugin extends AbstractDBFluteMojo {
             throw new MojoFailureException("Missing dbfluteVersion property.");
         }
 
-        String dbfluteName = downloadFilePrefix + dbfluteVersion;
-        String downloadPath = downloadDirUrl + dbfluteName
-                + downloadFileExtension;
-        DBFluteContext context = Beans
-                .createAndCopy(DBFluteContext.class, this).excludesNull()
-                .execute();
-        context.setDbfluteName(dbfluteName);
-        context.setDownloadPath(downloadPath);
+        dbfluteName = downloadFilePrefix + dbfluteVersion;
+        downloadPath = downloadDirUrl + dbfluteName + downloadFileExtension;
 
-        DBFluteUpgrader downloader = new DBFluteUpgrader(context);
+        DBFluteUpgrader downloader = new DBFluteUpgrader(this);
         downloader.execute();
     }
 
+    public File getDbfluteDir() {
+        return new File(mydbfluteDir, dbfluteName);
+    }
+
+    public File getDbfluteClientDir() {
+        return dbfluteClientDir;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public InputStream getDownloadInputStream() throws MojoExecutionException {
+        try {
+            URL url = new URL(downloadPath);
+            return url.openStream();
+        } catch (IOException e) {
+            throw new MojoExecutionException(
+                    "Could not open a connection of "
+                            + downloadPath
+                            + "\n\nIf you want to use a proxy server,\n"
+                            + "run \"mvn dbflute:download -Dhttp.proxyHost=<hostname> -Dhttp.proxyPort=<port>\".",
+                    e);
+        }
+    }
+
+    public String getDbfluteName() {
+        return dbfluteName;
+    }
 }

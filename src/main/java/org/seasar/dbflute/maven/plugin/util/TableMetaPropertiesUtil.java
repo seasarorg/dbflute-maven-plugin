@@ -21,7 +21,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.seasar.framework.util.StringUtil;
+import org.seasar.util.lang.StringUtil;
 
 /**
  * @author shinsuke

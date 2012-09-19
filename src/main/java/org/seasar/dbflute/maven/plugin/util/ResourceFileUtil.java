@@ -30,7 +30,7 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.framework.util.FileUtil;
+import org.seasar.util.io.FileUtil;
 
 /**
  * A utility class to handling a resource.
@@ -150,7 +150,7 @@ public class ResourceFileUtil {
                 .info("Replacing contents in " + file.getAbsolutePath());
         Writer writer = null;
         try {
-            String content = new String(FileUtil.getBytes(file), "UTF-8");
+            String content = FileUtil.readText(file, "UTF-8");
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 content = content.replaceAll(entry.getKey(), entry.getValue());
             }

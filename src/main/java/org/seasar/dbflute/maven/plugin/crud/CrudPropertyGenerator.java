@@ -22,29 +22,50 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Properties;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.velocity.app.Velocity;
+import org.seasar.dbflute.maven.plugin.GenerateCrudPropertyPlugin;
 import org.seasar.dbflute.maven.plugin.entity.Column;
-import org.seasar.dbflute.maven.plugin.entity.DBFluteContext;
 import org.seasar.dbflute.maven.plugin.entity.Database;
 import org.seasar.dbflute.maven.plugin.entity.Table;
 import org.seasar.dbflute.maven.plugin.util.TableMetaPropertiesUtil;
-import org.seasar.framework.util.StringUtil;
+import org.seasar.util.lang.StringUtil;
 
 /**
  * @author shinsuke
  *
  */
-public class CrudPropertyGenerator extends AbstractCrudGenerator {
+public class CrudPropertyGenerator {
+    protected File schemaFile;
+
+    protected GenerateCrudPropertyPlugin plugin;
+
     private File tableMetaProperties;
 
     public CrudPropertyGenerator(File schemaFile, File tableMetaProperties,
-            DBFluteContext context) {
+            GenerateCrudPropertyPlugin context) {
         this.schemaFile = schemaFile;
-        this.context = context;
+        this.plugin = context;
         this.tableMetaProperties = tableMetaProperties;
+    }
+
+    protected Database getDatabaseModel() throws MojoExecutionException,
+            MojoFailureException {
+        DBSchemaHandler handler = new DBSchemaHandler();
+        SAXParserFactory spfactory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = spfactory.newSAXParser();
+            parser.parse(schemaFile, handler);
+            return handler.getDatabase();
+        } catch (Exception e) {
+            throw new MojoExecutionException(
+                    "Could not create Database instance.", e);
+        }
     }
 
     private String writeProperty(Writer writer, String keyPrefix, String name,
@@ -71,9 +92,8 @@ public class CrudPropertyGenerator extends AbstractCrudGenerator {
         try {
             Properties props = new Properties();
             props.setProperty("resource.loader", "CLASS");
-            props
-                    .setProperty("CLASS.resource.loader.class",
-                            "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            props.setProperty("CLASS.resource.loader.class",
+                    "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 
             Velocity.init(props);
         } catch (Exception e) {
