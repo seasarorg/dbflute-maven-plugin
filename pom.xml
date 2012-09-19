@@ -40,8 +40,8 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/sandbox/dbflute/trunk/maven-dbflute-plugin/</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/dbflute/trunk/maven-dbflute-plugin/</developerConnection>
+    <connection>scm:svn:https://www.seasar.org/svn/sandbox/dbflute/trunk/dbflute-maven-plugin/</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/dbflute/trunk/dbflute-maven-plugin/</developerConnection>
     <url>http://svn.seasar.org/browse/?root=sandbox.dbflute</url>
   </scm>
   <build>

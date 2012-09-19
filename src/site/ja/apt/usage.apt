@@ -50,7 +50,7 @@ mvn archetype:create \
 ...
       <plugin>
         <groupId>org.seasar.dbflute</groupId>
-        <artifactId>maven-dbflute-plugin</artifactId>
+        <artifactId>dbflute-maven-plugin</artifactId>
         <version>0.3.0</version>
         <configuration>
           <dbfluteVersion>0.9.5.2</dbfluteVersion>
