@@ -69,9 +69,9 @@ public class UpgradePlugin extends AbstractMojo {
     private File dbfluteClientDir;
 
     /**
-     * @parameter expression="${dbflute.schemaName}"
+     * @parameter expression="${dbflute.clientProject}"
      */
-    protected String schemaName;
+    protected String clientProject;
 
     private String dbfluteName;
 
@@ -99,8 +99,8 @@ public class UpgradePlugin extends AbstractMojo {
         return dbfluteClientDir;
     }
 
-    public String getSchemaName() {
-        return schemaName;
+    public String getClientProject() {
+        return clientProject;
     }
 
     public InputStream getDownloadInputStream() throws MojoExecutionException {

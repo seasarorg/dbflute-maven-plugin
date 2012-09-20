@@ -54,9 +54,9 @@ public class CreateClientPlugin extends AbstractMojo {
     private File dbfluteClientDir;
 
     /**
-     * @parameter expression="${dbflute.schemaName}"
+     * @parameter expression="${dbflute.clientProject}"
      */
-    protected String schemaName;
+    protected String clientProject;
 
     /**
      * @parameter expression="${dbflute.enablePause}" default-value="false"
@@ -132,8 +132,8 @@ public class CreateClientPlugin extends AbstractMojo {
         return dbfluteClientDir;
     }
 
-    public String getSchemaName() {
-        return schemaName;
+    public String getClientProject() {
+        return clientProject;
     }
 
     public String getEnablePause() {
@@ -167,7 +167,7 @@ public class CreateClientPlugin extends AbstractMojo {
     public String getDatabaseUrl() {
         if (databaseUrl == null) {
             databaseUrl = "jdbc:h2:file:../src/main/webapp/WEB-INF/db/"
-                    + schemaName;
+                    + clientProject;
         }
         return databaseUrl;
     }

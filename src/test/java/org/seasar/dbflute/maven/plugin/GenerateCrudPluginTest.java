@@ -21,7 +21,7 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 
 public class GenerateCrudPluginTest extends AbstractMojoTestCase {
     public void test_parameter() throws Exception {
-        File testPom = new File(getBasedir(), "src/test/resources/poms/pom.xml");
+        File testPom = new File(getBasedir(), "src/test/resources/poms/pom-generate-crud.xml");
         GenerateCrudPlugin mojo = (GenerateCrudPlugin) lookupMojo(
                 "generate-crud", testPom);
         String rootPackage = (String) getVariableValueFromObject(mojo,

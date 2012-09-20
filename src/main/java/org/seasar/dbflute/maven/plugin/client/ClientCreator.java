@@ -82,9 +82,9 @@ public class ClientCreator {
                     + dbfluteClientDir.getAbsolutePath(), e);
         }
 
-        // Check schemaName
-        if (StringUtils.isBlank(plugin.getSchemaName())) {
-            throw new MojoFailureException("Missing schemaName.");
+        // Check clientProject
+        if (StringUtils.isBlank(plugin.getClientProject())) {
+            throw new MojoFailureException("Missing clientProject.");
         }
 
         Map<String, String> params = new HashMap<String, String>();
@@ -102,7 +102,7 @@ public class ClientCreator {
         // _project.sh
         params.clear();
         putParam(params, "export MY_PROJECT_NAME=[^\r\n]+",
-                "export MY_PROJECT_NAME=", plugin.getSchemaName());
+                "export MY_PROJECT_NAME=", plugin.getClientProject());
         putParam(params, "export DBFLUTE_HOME=../mydbflute/[^\r\n]+",
                 "export DBFLUTE_HOME=../mydbflute/", plugin.getDbfluteName());
         ResourceFileUtil.replaceContent(new File(dbfluteClientDir,
@@ -111,7 +111,7 @@ public class ClientCreator {
         // _project.bat
         params.clear();
         putParam(params, "set MY_PROJECT_NAME=[^\r\n]+",
-                "set MY_PROJECT_NAME=", plugin.getSchemaName());
+                "set MY_PROJECT_NAME=", plugin.getClientProject());
         putParam(params, "set DBFLUTE_HOME=..\\\\mydbflute\\\\[^\r\n]+",
                 "set DBFLUTE_HOME=..\\\\mydbflute\\\\", plugin.getDbfluteName());
         ResourceFileUtil.replaceContent(new File(dbfluteClientDir,
@@ -120,7 +120,7 @@ public class ClientCreator {
         // build-dfclient.properties
         params.clear();
         putParam(params, "torque.project *= *[^\r\n]+", "torque.project = ",
-                plugin.getSchemaName());
+                plugin.getClientProject());
         // 0.8.x
         putParam(params, "torque.database *= *[^\r\n]+", "torque.database = ",
                 plugin.getDatabase());
@@ -137,7 +137,7 @@ public class ClientCreator {
         } else {
             ResourceFileUtil.replaceContent(propertyFile, params);
             propertyFile.renameTo(new File(dbfluteClientDir, "build-"
-                    + plugin.getSchemaName() + ".properties"));
+                    + plugin.getClientProject() + ".properties"));
         }
 
         // dfprop/basicInfoMap.dfprop

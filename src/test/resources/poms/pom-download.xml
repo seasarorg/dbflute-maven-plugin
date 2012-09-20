@@ -46,9 +46,7 @@
         <artifactId>dbflute-maven-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
         <configuration>
-          <dbfluteVersion>0.9.0</dbfluteVersion>
-          <rootPackage>${groupId}.${artifactId}</rootPackage>
-          <schemaFile>${basedir}/dbflute/schema/project-schema-${artifactId}.xml</schemaFile>
+          <dbfluteVersion>0.9.9.9</dbfluteVersion>
         </configuration>
       </plugin>
     </plugins>

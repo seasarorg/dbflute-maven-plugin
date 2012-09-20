@@ -54,9 +54,9 @@ public class DBFluteUpgrader {
                     + " does not exist.");
         }
 
-        // Check schemaName
-        if (StringUtils.isBlank(plugin.getSchemaName())) {
-            throw new MojoFailureException("Missing schemaName.");
+        // Check clientProject
+        if (StringUtils.isBlank(plugin.getClientProject())) {
+            throw new MojoFailureException("Missing clientProject.");
         }
 
         if (!dbfluteDir.exists()) {
@@ -115,7 +115,7 @@ public class DBFluteUpgrader {
         // _project.sh
         Map<String, String> params = new HashMap<String, String>();
         putParam(params, "export MY_PROJECT_NAME=[^\r\n]+",
-                "export MY_PROJECT_NAME=", plugin.getSchemaName());
+                "export MY_PROJECT_NAME=", plugin.getClientProject());
         putParam(params, "export DBFLUTE_HOME=../mydbflute/[^\r\n]+",
                 "export DBFLUTE_HOME=../mydbflute/", plugin.getDbfluteName());
         ResourceFileUtil.replaceContent(new File(plugin.getDbfluteClientDir(),
@@ -124,7 +124,7 @@ public class DBFluteUpgrader {
         // _project.bat
         params.clear();
         putParam(params, "set MY_PROJECT_NAME=[^\r\n]+",
-                "set MY_PROJECT_NAME=", plugin.getSchemaName());
+                "set MY_PROJECT_NAME=", plugin.getClientProject());
         putParam(params, "set DBFLUTE_HOME=..\\\\mydbflute\\\\[^\r\n]+",
                 "set DBFLUTE_HOME=..\\\\mydbflute\\\\", plugin.getDbfluteName());
         ResourceFileUtil.replaceContent(new File(plugin.getDbfluteClientDir(),

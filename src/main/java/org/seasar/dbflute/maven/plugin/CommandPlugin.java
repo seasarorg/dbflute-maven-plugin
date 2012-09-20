@@ -51,17 +51,17 @@ public abstract class CommandPlugin extends AbstractMojo {
     protected File dbfluteClientDir;
 
     /**
-     * @parameter expression="${dbflute.schemaName}"
+     * @parameter expression="${dbflute.clientProject}"
      */
-    protected String schemaName;
+    protected String clientProject;
 
     public File getDbfluteClientDir() {
         if (dbfluteClientDir == null) {
-            if (StringUtil.isBlank(schemaName)) {
+            if (StringUtil.isBlank(clientProject)) {
                 dbfluteClientDir = new File(basedir, "dbflute_"
                         + project.getArtifactId());
             } else {
-                dbfluteClientDir = new File(basedir, "dbflute_" + schemaName);
+                dbfluteClientDir = new File(basedir, "dbflute_" + clientProject);
             }
         }
         return dbfluteClientDir;
