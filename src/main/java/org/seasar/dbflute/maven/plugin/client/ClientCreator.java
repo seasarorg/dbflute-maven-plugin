@@ -30,6 +30,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.seasar.dbflute.maven.plugin.CreateClientPlugin;
 import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
+import org.seasar.util.lang.StringUtil;
 
 /**
  * ClientCreator create dbflute client directory.
@@ -47,6 +48,14 @@ public class ClientCreator {
     public void execute() throws MojoExecutionException, MojoFailureException {
         File dbfluteDir = plugin.getDbfluteDir();
         File dbfluteClientDir = plugin.getDbfluteClientDir();
+        if (dbfluteClientDir == null) {
+            String clientProject = plugin.getClientProject();
+            if (StringUtil.isBlank(clientProject)) {
+                clientProject = "client";
+            }
+            dbfluteClientDir = new File(plugin.getBasedir(), "dbflute_"
+                    + clientProject);
+        }
         if (dbfluteClientDir.isDirectory()) {
             LogUtil.getLog().info(
                     dbfluteClientDir.getAbsolutePath() + " already exists.");

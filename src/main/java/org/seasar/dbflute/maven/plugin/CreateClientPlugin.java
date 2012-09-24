@@ -34,6 +34,14 @@ import org.seasar.dbflute.maven.plugin.util.LogUtil;
  */
 public class CreateClientPlugin extends AbstractMojo {
     /**
+     * Project base directory (prepended for relative file paths).
+     *
+     * @parameter expression="${basedir}"
+     * @required
+     */
+    protected File basedir;
+
+    /**
      * @parameter expression="${dbflute.version}" 
      */
     protected String dbfluteVersion;
@@ -109,6 +117,7 @@ public class CreateClientPlugin extends AbstractMojo {
      */
     protected String databasePassword;
 
+    
     private String dbfluteName;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -182,5 +191,9 @@ public class CreateClientPlugin extends AbstractMojo {
 
     public String getDatabasePassword() {
         return databasePassword;
+    }
+
+    public File getBasedir() {
+        return basedir;
     }
 }
