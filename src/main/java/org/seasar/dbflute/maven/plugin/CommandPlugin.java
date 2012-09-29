@@ -16,6 +16,7 @@
 package org.seasar.dbflute.maven.plugin;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
@@ -65,5 +66,11 @@ public abstract class CommandPlugin extends AbstractMojo {
             }
         }
         return dbfluteClientDir;
+    }
+
+    /**
+     * @param cmds
+     */
+    public void updateArgs(List<String> cmds) {
     }
 }

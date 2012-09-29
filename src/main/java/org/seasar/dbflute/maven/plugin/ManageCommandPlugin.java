@@ -15,6 +15,8 @@
  */
 package org.seasar.dbflute.maven.plugin;
 
+import java.util.List;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.seasar.dbflute.maven.plugin.command.CommandExecutor;
@@ -33,7 +35,6 @@ public class ManageCommandPlugin extends CommandPlugin {
 
     /**
      * @parameter expression="${dbflute.manageTask}"
-     * @required
      */
     protected String manageTask;
 
@@ -53,6 +54,20 @@ public class ManageCommandPlugin extends CommandPlugin {
 
         CommandExecutor creator = new CommandExecutor(this);
         creator.execute("manage");
+    }
+
+    /**
+     * @param cmds
+     */
+    @Override
+    public void updateArgs(List<String> cmds) {
+        if (StringUtil.isNotBlank(manageTask)) {
+            cmds.add(manageTask);
+            if ("refresh".equals(manageTask)
+                    && StringUtil.isNotBlank(refreshProjects)) {
+                cmds.add(refreshProjects);
+            }
+        }
     }
 
 }

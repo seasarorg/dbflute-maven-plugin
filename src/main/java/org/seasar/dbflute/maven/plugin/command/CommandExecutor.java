@@ -74,6 +74,8 @@ public class CommandExecutor {
         }
         // TODO Mac?
 
+        plugin.updateArgs(cmds);
+        
         LogUtil.getLog().info(
                 "Running " + StringUtils.join(cmds.toArray(), " "));
         ProcessBuilder builder = new ProcessBuilder(cmds);
