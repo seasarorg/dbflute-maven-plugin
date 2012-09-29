@@ -18,19 +18,24 @@
 -->
 
 <project name="DBFlute Maven Plugin">
- <bannerLeft>
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>1.3.0</version>
+  </skin>
+  <bannerLeft>
     <name>DBFlute Maven Plugin</name>
-    <href>http://dbflute.seasar.org/maven/plugin/ja/</href>
+    <href>index.html</href>
   </bannerLeft>
   <bannerRight>
     <name>DBFlute</name>
-    <src>http://dbflute.seasar.org/image/parts/logo.png</src>
-    <href>http://dbflute.seasar.org/</href>
+    <src>../../../image/parts/logo.png</src>
+    <href>../../../index.html</href>
   </bannerRight>
   <body>
     <links>
       <item name="Seasar" href="http://www.seasar.org/"/>
-      <item name="DBFlute" href="http://dbflute.seasar.org/"/>
+      <item name="DBFlute" href="../../../index.html"/>
     </links>
 
     <menu name="ドキュメント">
@@ -67,7 +72,6 @@
       <item name="チーム" href="team-list.html"/>
       <item name="ライセンス" href="license.html"/>
       <item name="メーリングリスト" href="mail-lists.html"/>
-      <item name="依存関係" href="dependencies.html"/>
       <item name="課題追跡" href="issue-tracking.html"/>
     </menu>
   </body>

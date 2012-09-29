@@ -185,7 +185,7 @@ mvn dbflute:upgrade
 mvn dbflute:generate-crud
 +-------------------------------------------
 
-* 利用に関して
+* 基本的な利用方法
 
     実際、DBFlute Maven Plugin を利用した開発において、以下のゴールを実行すれば、Java のソースコードが生成され、プロジェクトで利用可能になります。
 
