@@ -1,0 +1,358 @@
+               ------------------
+                SAStruts での利用
+               ------------------
+                Shinsuke Sugaya
+               ------------------
+                   2012-09-28
+
+SAStruts での利用
+
+    Maven を利用して SAStruts のプロジェクトを作成して、DBFlute Maven Plugin を用いた開発の流れを説明します。
+
+* 利用する前に(事前準備)
+
+    ここでの説明を進める上で、{{{http://maven.apache.org/download.html}Maven 2 または 3 のインストール}}をしておく必要があります。
+
+* SAStruts プロジェクトの作成
+
+    SAStruts では Maven Archetype を提供しています。
+    Archetype を用いることで、mvn コマンドを利用して、SAStruts のプロジェクトを作成することができます。
+    詳しくは、{{{http://sastruts.seasar.org/mavenArchetype.html}SAStruts の Maven Archetype}}を参照してください。
+
+    プロジェクトの作成は archetype:generate ゴールを実行します。
+    たとえば、以下のように実行します。
+
++-------------------------------------------
+$ mvn archetype:generate -DarchetypeRepository=https://www.seasar.org/maven/maven2/ \
+    -DarchetypeGroupId=org.seasar.sastruts \
+    -DarchetypeArtifactId=sa-struts-archetype -DarchetypeVersion=1.0.4-sp9.1 \
+    -DgroupId=org.example -DartifactId=sample -Dversion=1.0.0-SNAPSHOT \
+    -Duse-dbflute=true
++-------------------------------------------
+
+    実行すると、確認を求める Y が表示されるのでパラメータが問題なければ Y を入力します。
+    BUILD SUCCESS になると、artifactId で指定したディレクトリにプロジェクトが生成されます。
+    
++-------------------------------------------
+$ cd sample/
+$ find . -type f
+./pom.xml
+./src/main/java/org/example/action/IndexAction.java
+./src/main/webapp/WEB-INF/web.xml
+./src/main/webapp/WEB-INF/view/index.jsp
+./src/main/webapp/WEB-INF/view/common/footer.jsp
+./src/main/webapp/WEB-INF/view/common/header.jsp
+./src/main/webapp/WEB-INF/view/common/menu.jsp
+./src/main/webapp/WEB-INF/view/common/common.jsp
+./src/main/webapp/WEB-INF/view/common/layout.jsp
+./src/main/webapp/WEB-INF/struts-config.xml
+./src/main/webapp/WEB-INF/validator-rules.xml
+./src/main/resources/s2container.dicon
+./src/main/resources/env.txt
+./src/main/resources/customizer.dicon
+./src/main/resources/application.properties
+./src/main/resources/application_ja.properties
+./src/main/resources/s2jdbc.dicon
+./src/main/resources/jdbc.dicon
+./src/main/resources/app.dicon
+./src/main/resources/env_ut.txt
+./src/main/resources/creator.dicon
+./src/main/resources/convention.dicon
+./src/main/resources/log4j.properties
+./.settings/net.sf.amateras.sastruts.prefs
+./.tomcatplugin
+./.amateras
++-------------------------------------------
+
+    必要に応じて、pom.xml を編集してください。
+
+* mvn eclipse:eclipse の実行
+
+    Eclipse で読み込めるようにします。
+
++-------------------------------------------
+$ mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
++-------------------------------------------
+
+    実行することにより、src/main/webapp/WEB-INF/lib/ が更新され、必要な jar ファイルが配置されます。
+    Eclipse でプロジェクトとしてインポートしてください。
+    プロジェクトにエラーなどが表示される場合は、プロジェクトをリフレッシュした後にプロジェクトをビルドしてください。(自動ビルドが設定されていればクリーンするとビルドされます)
+
+* データベースの作成
+
+    今回は H2 を利用します。
+    別なデータベースを利用する場合は、この部分をスキップしてください。
+
++-------------------------------------------
+$ mkdir src/main/webapp/WEB-INF/db
+$ cd src/main/webapp/WEB-INF/db
+$ java -jar ../lib/h2-1.3.168.jar 
++-------------------------------------------
+
+    ブラウザが開き、http://localhost:8082/ が表示されます。
+    表示されない場合は、その URL を表示してください。
+
+    JDBC URL を jdbc:h2:sample を入力して、H2 のデータベースに接続します。
+    ドライバクラスは org.h2.Driver、ユーザ名はsa、パスワードは空欄のデフォルト値で問題ありません。
+    接続ボタンを押下して、SQLの入力画面を表示します。
+    今回は以下の単純なテーブルを作成します。
+
++-------------------------------------------
+CREATE TABLE TEST_TABLE (
+    ID    BIGINT NOT NULL IDENTITY PRIMARY KEY,
+    NAME  VARCHAR(255),
+    VALUE INT
+);
++-------------------------------------------
+
+    上記を入力して、実行ボタンを押下します。
+    エラーが表示されていないことを確認し、TEST_TABLEが左側に一覧されていることも確認します。
+    テーブルが作成できたら、H2 を終了します。
+    左上の切断アイコンを押下するとデータベースの接続が切断されます。
+    ブラウザを閉じても H2 は終了しないので、タスクトレイにあるアイコンから終了を選択してください(EXITメニューを選択します)。
+
+    プロジェクトのトップディレクトリに戻ります。
+
++-------------------------------------------
+$ cd ../../../../../
++-------------------------------------------
+
+* DBFlute のダウンロード
+
+    mvn dbflute:download を実行して、DBFlute のダウンロードします。
+    DBFlute のバージョンは pom.xml に記述した dbfluteVersion になります。
+
++-------------------------------------------
+$ mvn dbflute:download
++-------------------------------------------
+
+    mydbflute/dbflute-[バージョン] が作成され、そこに DBFlute が展開されます。
+
+    0.9.4.1 以前のバージョンを利用していて、Unix 系 OS を利用している場合は、ant の実行権を設定する必要があります。
+
++-------------------------------------------
+chmod +x mydbflute/dbflute-[バージョン]/ant/bin/ant
++-------------------------------------------
+
+* DBFlute クライアントの生成
+
+    mvn dbflute:create-client を実行して、DBFlute クライアントを生成します。
+    実行すると、mydbflute/dbflute-[バージョン]/etc/client-template/dbflute_dfclient.zip を dbflute_sample ディレクトリに展開して、pom.xml に記述したパラメータを DBFlute クライアントに自動で反映します。
+
++-------------------------------------------
+$ mvn dbflute:create-client
++-------------------------------------------
+
+* スキーマ情報の取得
+
+    mvn dbflute:jdbc を実行して、データベースのスキーマ情報を取得します。
+    実行すると、dbflute ディレクトリの jdbc.[sh|bat] が実行されます。
+
++-------------------------------------------
+$ mvn dbflute:jdbc
++-------------------------------------------
+
+    今回は、データベースの作成の手順で生成した H2 データベースを参照して、DBFlute が実行されます。
+    対象の DBFlute の設定ファイルは dbflute_sample/dfprop/databaseInfoMap.dfprop になります。
+
+* クラスファイルの生成
+
+    mvn dbflute:generate を実行して、データベースにアクセスする DBFlute のクラスを自動生成します。
+    実行すると、dbflute_sample ディレクトリの generate.[sh|bat] が実行されます。
+
++-------------------------------------------
+$ mvn dbflute:generate
++-------------------------------------------
+
+    今回は、作成した H2 のデータベースの TEST_TABLE クラスが生成されます。
+
+* dicon の設定
+
+    DBFlute とデータベースの情報を dicon ファイルに記述します。
+
+    src/main/resources/app.dicon を以下のように記述されているか確認します。
+    dbflute.dicon が include されている必要があります。
+
++-------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="convention.dicon"/>
+    <include path="aop.dicon"/>
+    <include path="dbflute.dicon"/>
+
+    <component name="actionMessagesThrowsInterceptor"
+        class="org.seasar.struts.interceptor.ActionMessagesThrowsInterceptor"/>
+</components>
++-------------------------------------------
+
+    src/main/resources/jdbc.dicon を以下のように編集します。
+    データベースの情報を設定します。
+
++-------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+    "http://www.seasar.org/dtd/components21.dtd">
+<components namespace="jdbc">
+    <include path="jta.dicon"/>
+
+    <!-- for H2 -->
+    <component name="xaDataSource"
+        class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+        <property name="driverClassName">
+            "org.h2.Driver"
+        </property>
+        <property name="URL">
+            "jdbc:h2:file:"
+                + container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/WEB-INF/db/sample")
+        </property>
+        <property name="user">"sa"</property>
+        <property name="password"></property>
+    </component>
+
+    <component name="connectionPool"
+        class="org.seasar.extension.dbcp.impl.ConnectionPoolImpl">
+        <property name="timeout">600</property>
+        <property name="maxPoolSize">10</property>
+        <property name="allowLocalTx">true</property>
+        <destroyMethod name="close"/>
+    </component>
+
+    <component name="DataSource"
+        class="org.seasar.extension.dbcp.impl.DataSourceImpl"
+    />
+
+</components>
++-------------------------------------------
+
+    その他の dicon ファイルは SAStruts の Maven Archetype で SAStruts 向けに出力されていると思いますが、必要に応じて変更してください。
+
+* 準備完了
+
+    以上で DBFlute を用いて、データベースにアクセスすることができるようになります。
+    あとは、必要なウェブページなどを SAStruts で作成してください。
+
+    さらに、CRUD なページを作成したい場合は、以下を参照してください。
+
+SAStruts のページの自動生成
+
+    DBFlute Maven Plugin では、各テーブルに関する SAStruts 用のページを自動生成することができます。
+    自動生成する場合は、以下の手順で実行してください。
+
+    CRUD の生成にあたり、デフォルトの index.jsp が存在しない場合は CRUD のインデックスページを生成するので、既存の index.jsp を削除しておきます。
+
++-------------------------------------------
+$ rm src/main/webapp/WEB-INF/view/index.jsp
++-------------------------------------------
+
+* クラスファイルとJSPの生成
+
+    mvn dbflute:generate-crud を実行して、クラスファイルと JSP を自動生成します。
+
++-------------------------------------------
+$ mvn dbflute:generate-crud
++-------------------------------------------
+
+* dicon の更新
+
+    生成したファイルでページング処理を行うために dicon を更新します。
+
+    src/main/resources/creator.dicon を以下のように編集します。
+    PagerCreatorを追加します。
+    パッケージ名をカスタマイズしている場合は併せて変更してください。
+
++-------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="convention.dicon"/>
+    <include path="customizer.dicon"/>
+
+    <component class="org.seasar.framework.container.creator.ActionCreator"/>
+    <component class="org.seasar.struts.creator.FormCreator"/>
+    <component class="org.seasar.framework.container.creator.ServiceCreator"/>
+    <component class="org.seasar.framework.container.creator.DtoCreator"/>
+    <component class="org.seasar.framework.container.creator.InterceptorCreator"/>
+
+    <component class="org.example.crud.creator.PagerCreator"/>
+
+</components>
++-------------------------------------------
+
+    src/main/resources/customizer.dicon を以下のように編集します。
+    pagerCustomizer を追加します。
+
++-------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="default-customizer.dicon"/>
+
+    <component name="actionCustomizer"
+        class="org.seasar.framework.container.customizer.CustomizerChain">
+        <initMethod name="addAspectCustomizer">
+            <arg>"aop.traceInterceptor"</arg>
+        </initMethod>
+        <initMethod name="addAspectCustomizer">
+            <arg>"actionMessagesThrowsInterceptor"</arg>
+        </initMethod>
+        <initMethod name="addCustomizer">
+            <arg>
+                <component
+                    class="org.seasar.framework.container.customizer.TxAttributeCustomizer"/>
+            </arg>
+        </initMethod>
+        <initMethod name="addCustomizer">
+            <arg>
+                <component
+                    class="org.seasar.struts.customizer.ActionCustomizer"/>
+            </arg>
+        </initMethod>
+    </component>
+
+    <component name="formCustomizer"
+        class="org.seasar.framework.container.customizer.CustomizerChain">
+    </component>
+
+    <component name="serviceCustomizer"
+        class="org.seasar.framework.container.customizer.CustomizerChain">
+        <initMethod name="addAspectCustomizer">
+            <arg>"aop.traceInterceptor"</arg>
+        </initMethod>
+        <initMethod name="addCustomizer">
+            <arg>
+                <component
+                    class="org.seasar.framework.container.customizer.TxAttributeCustomizer"/>
+            </arg>
+        </initMethod>
+    </component>
+
+    <component name="pagerCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+    </component>
+
+</components>
++-------------------------------------------
+
+* Eclipse からの実行
+ 
+    Eclipse で Tomcat プラグインがインストールしてある場合は、Eclipse 上から実行して動作を確認することができます。
+    Tomcat プラグインからプロジェクトのコンテキストの更新をして、Tomcat を起動してください。
+    起動する前にプロジェクトをリフレッシュして、ビルドするのを忘れないようにしてください。
+
+* war ファイルの生成
+
+    mvn install を実行して、war ファイルを生成します。
+    target/sample.war に生成されます。
+
++-------------------------------------------
+mvn install
++-------------------------------------------
+
+* 配備
+
+    生成した sample.war を Tomcat などに配備して http://localhost:8080/sample/ にアクセスして、表示されることを確認してください。
+
+

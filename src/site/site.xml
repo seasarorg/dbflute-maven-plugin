@@ -17,15 +17,20 @@
  |
 -->
 
-<project name="Maven DBFlute Plugin">
+<project name="DBFlute Maven Plugin">
+ <bannerLeft>
+    <name>DBFlute Maven Plugin</name>
+    <href>http://dbflute.seasar.org/maven/plugin/</href>
+  </bannerLeft>
   <bannerRight>
     <name>DBFlute</name>
-    <href>http://dbflute.sandbox.seasar.org/</href>
+    <src>http://dbflute.seasar.org/image/parts/logo.png</src>
+    <href>http://dbflute.seasar.org/</href>
   </bannerRight>
   <body>
     <links>
       <item name="Seasar" href="http://www.seasar.org/"/>
-      <item name="DBFlute" href="http://dbflute.sandbox.seasar.org/"/>
+      <item name="DBFlute" href="http://dbflute.seasar.org/"/>
     </links>
     <menu name="Documents">
       <item name="Overview" href="index.html"/>
@@ -41,6 +46,7 @@
       <item name="outside-sql-test" href="outside-sql-test-mojo.html"/>
       <item name="replace-schema" href="replace-schema-mojo.html"/>
       <item name="sql2entity" href="sql2entity-mojo.html"/>
+      <item name="manage" href="manage-mojo.html"/>
       <item name="generate-crud" href="generate-crud-mojo.html"/>
       <item name="generate-crud-tablemeta" href="generate-crud-tablemeta-mojo.html"/>
     </menu>

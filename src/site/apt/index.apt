@@ -5,14 +5,14 @@
                ------------------
                    2010-05-04
 
-What is Maven DBFlute Plugin?
+What is DBFlute Maven Plugin?
 
-    Maven DBFlute Plugin is a plugin for Apache Maven 2.x.
-    Maven DBFlute Plugin allows you to configure files and run commands for DBFlute on mvn command.
+    DBFlute Maven Plugin is a plugin for Apache Maven 2.x.
+    DBFlute Maven Plugin allows you to configure files and run commands for DBFlute on mvn command.
 
 * Goals
 
-    Maven DBFlute Plugin provides the follwing goals:
+    DBFlute Maven Plugin provides the follwing goals:
 
     * <<download>>: Downloads and unzips DBFlute file you specified.
 
@@ -32,6 +32,8 @@ What is Maven DBFlute Plugin?
 
     * <<sql2entity>>: Runs sql2entity.[sh|bat].
 
+    * <<manage>>: Runs manage.[sh|bat].
+
     * <<generate-crud>>: Generates CRUD files of SAStruts for each table.
 
     * <<generate-crud-tablemeta>>: Generate properties file which includes parameters for generate-crud goal.
@@ -40,10 +42,10 @@ What is Maven DBFlute Plugin?
 
 * Usage
 
-    Goals of Maven DBFlute Plugin are used as mvn sub-commands.
+    Goals of DBFlute Maven Plugin are used as mvn sub-commands.
     To use this plugin, add the following code to pom.xml of your project.
 
---------------------------------------------
++-------------------------------------------
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
 ...
@@ -66,13 +68,12 @@ What is Maven DBFlute Plugin?
       <plugin>
         <groupId>org.seasar.dbflute</groupId>
         <artifactId>dbflute-maven-plugin</artifactId>
-        <version>0.3.0</version>
+        <version>1.0.0</version>
         <configuration>
-          <dbfluteVersion>0.9.5.2</dbfluteVersion>
+          <dbfluteVersion>1.0.0</dbfluteVersion>
           <rootPackage>sample.app</rootPackage>
           <dbPackage>sample.app.db</dbPackage>
-          <schemaName>sample</schemaName>
-          <!-- dbfluteClientDir>${basedir}/dbflute</dbfluteClientDir -->
+          <clientProject>sample</clientProject>
           <schemaFile>${basedir}/dbflute/schema/project-schema-sample.xml</schemaFile>
         </configuration>
       </plugin>
@@ -81,13 +82,10 @@ What is Maven DBFlute Plugin?
   </build>
 ...
 </project>
---------------------------------------------
++-------------------------------------------
 
     For example, you can run download goal below:
 
---------------------------------------------
++-------------------------------------------
 mvn dbflute:download
---------------------------------------------
-
-~~    基本的な利用方法については、{{{usage.html}こちら}}を参照してください。 
-
++-------------------------------------------
