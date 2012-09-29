@@ -108,6 +108,11 @@ public class GenerateCrudPlugin extends AbstractMojo {
      */
     protected String locales;
 
+    /**
+     * @parameter expression="${dbflute.dbPackage}" default-value="${rootPackage}"
+     */
+    protected String dbPackage;
+
     private String basePackage;
 
     private String actionPackage;
@@ -319,5 +324,9 @@ public class GenerateCrudPlugin extends AbstractMojo {
 
     public String[] getSupportedLocales() {
         return supportedLocales;
+    }
+
+    public String getDbPackage() {
+        return dbPackage;
     }
 }
