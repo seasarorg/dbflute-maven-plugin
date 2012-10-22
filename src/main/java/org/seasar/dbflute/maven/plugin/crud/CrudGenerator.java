@@ -424,9 +424,14 @@ public class CrudGenerator {
                 basePropFileName = "application_" + localeStr + ".properties";
             }
 
-            InputStream is = ResourceUtil
-                    .getResourceAsStream(TEMPLATE_RESOURCE_PATH
-                            + basePropFileName);
+            String resourcePath = TEMPLATE_RESOURCE_PATH + basePropFileName;
+            InputStream is;
+            if (ResourceUtil.isExist(resourcePath)) {
+                is = ResourceUtil.getResourceAsStream(resourcePath);
+            } else {
+                is = ResourceUtil
+                        .getResourceAsStream("default/" + resourcePath);
+            }
 
             File propFile = new File(propDir, propFileName);
 
@@ -500,7 +505,13 @@ public class CrudGenerator {
                 templatePath = "/" + templatePath;
             }
 
-            Template template = Velocity.getTemplate(templatePath, "UTF-8");
+            Template template;
+            if (Velocity.resourceExists(templatePath)) {
+                template = Velocity.getTemplate(templatePath, "UTF-8");
+            } else {
+                template = Velocity.getTemplate("/default" + templatePath,
+                        "UTF-8");
+            }
             template.merge(context, writer);
             writer.flush();
         } catch (Exception e) {
