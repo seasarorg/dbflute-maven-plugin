@@ -32,17 +32,32 @@ import org.seasar.dbflute.maven.plugin.util.LogUtil;
  */
 public class ReplaceSchemaCommandPlugin extends CommandPlugin {
 
+    /**
+     * @parameter expression="${dbflute.forceExecution}"
+     */
+    protected String forceExecution;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         LogUtil.init(getLog());
-
-        System.out
-                .println("Database will be initialized. Are you ready? (y or n)");
         int input;
-        try {
-            input = System.in.read();
-        } catch (IOException e) {
-            throw new MojoExecutionException("I/O error.", e);
+        if ("true".equalsIgnoreCase(forceExecution)
+                || "y".equalsIgnoreCase(forceExecution)
+                || "yes".equalsIgnoreCase(forceExecution)) {
+            input = 'y';
+        } else if ("false".equalsIgnoreCase(forceExecution)
+                || "n".equalsIgnoreCase(forceExecution)
+                || "no".equalsIgnoreCase(forceExecution)) {
+            input = 'n';
+        } else {
+            System.out
+                    .println("Database will be initialized. Are you ready? (y or n)");
+            try {
+                input = System.in.read();
+            } catch (IOException e) {
+                throw new MojoExecutionException("I/O error.", e);
+            }
         }
+
         if (input == 'y' || input == 'Y') {
             CommandExecutor creator = new CommandExecutor(this);
             creator.environment.put("answer", "y");
