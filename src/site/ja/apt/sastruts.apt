@@ -23,7 +23,7 @@ SAStruts での利用
     たとえば、以下のように実行します。
 
 +-------------------------------------------
-$ mvn archetype:generate -DarchetypeRepository=https://www.seasar.org/maven/maven2/ \
+$ mvn archetype:generate -DarchetypeRepository=http://maven.seasar.org/maven2/ \
     -DarchetypeGroupId=org.seasar.sastruts \
     -DarchetypeArtifactId=sa-struts-archetype -DarchetypeVersion=1.0.4-sp9.1 \
     -DgroupId=org.example -DartifactId=sample -Dversion=1.0.0-SNAPSHOT \
