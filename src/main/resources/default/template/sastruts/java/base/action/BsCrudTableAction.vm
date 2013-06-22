@@ -47,7 +47,14 @@ public class Bs${table.className}Action implements Serializable {
 
     protected String displayList(boolean redirect) {
         // page navi
-        ${table.propertyName}Items = ${table.propertyName}Service.get${table.className}List(${table.propertyName}Pager);
+        try {
+            ${table.propertyName}Items = ${table.propertyName}Service.get${table.className}List(${table.propertyName}Pager);
+        } catch (Exception e) {
+            ${table.propertyName}Pager.clear();
+            log.warn("Could not retrieve the data", e);
+            throw new ActionMessagesException(
+                    "errors.crud_failed_to_retrieve_crud_table");
+        }
 
         // restore from pager
         Beans.copy(${table.propertyName}Pager, ${table.propertyName}Form.searchParams)
@@ -64,12 +71,12 @@ public class Bs${table.className}Action implements Serializable {
         }
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String index() {
         return displayList(false);
     }
 
-    @Execute(validator = false, input = "error.jsp", urlPattern = "list/{pageNumber}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "list/{pageNumber}")
     public String list() {
         // page navi
         if (StringUtil.isNotBlank(${table.propertyName}Form.pageNumber)) {
@@ -86,10 +93,10 @@ public class Bs${table.className}Action implements Serializable {
         return displayList(false);
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String search() {
         Beans.copy(${table.propertyName}Form.searchParams, ${table.propertyName}Pager).excludes(
-                CommonConstants.PAGER_CONVERSION_RULE)
+                CommonConstants.PAGER_CONVERSION_RULE).excludesWhitespace()
     
             #if(${table.converterToPager})${table.converterToPager}#end##
        
@@ -98,28 +105,28 @@ public class Bs${table.className}Action implements Serializable {
         return displayList(false);
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String reset() {
         ${table.propertyName}Pager.clear();
 
         return displayList(false);
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String back() {
         return displayList(false);
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String editagain() {
         return "edit.jsp";
     }
 
     #*
-    @Execute(validator = false, input = "error.jsp", urlPattern = "confirmpage/{crudMode}/{id}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "confirmpage/{crudMode}/{id}")
     *#
     
-    @Execute(validator = false, input = "error.jsp", urlPattern = "confirmpage/{crudMode}/{${table.primaryKeyPath}}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "confirmpage/{crudMode}/{${table.primaryKeyPath}}")
        
     public String confirmpage() {
         if (${table.propertyName}Form.crudMode != CommonConstants.CONFIRM_MODE) {
@@ -133,7 +140,7 @@ public class Bs${table.className}Action implements Serializable {
         return "confirm.jsp";
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String createpage() {
         // page navi
         ${table.propertyName}Form.initialize();
@@ -143,10 +150,10 @@ public class Bs${table.className}Action implements Serializable {
     }
 
     #*
-    @Execute(validator = false, input = "error.jsp", urlPattern = "editpage/{crudMode}/{id}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "editpage/{crudMode}/{id}")
     *#
     
-    @Execute(validator = false, input = "error.jsp", urlPattern = "editpage/{crudMode}/{${table.primaryKeyPath}}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "editpage/{crudMode}/{${table.primaryKeyPath}}")
        
     public String editpage() {
         if (${table.propertyName}Form.crudMode != CommonConstants.EDIT_MODE) {
@@ -160,7 +167,7 @@ public class Bs${table.className}Action implements Serializable {
         return "edit.jsp";
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String editfromconfirm() {
         ${table.propertyName}Form.crudMode = CommonConstants.EDIT_MODE;
 
@@ -180,10 +187,10 @@ public class Bs${table.className}Action implements Serializable {
     }
 
     #*
-    @Execute(validator = false, input = "error.jsp", urlPattern = "deletepage/{crudMode}/{id}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "deletepage/{crudMode}/{id}")
     *#
     
-    @Execute(validator = false, input = "error.jsp", urlPattern = "deletepage/{crudMode}/{${table.primaryKeyPath}}")
+    @Execute(validator = true, input = "error.jsp", urlPattern = "deletepage/{crudMode}/{${table.primaryKeyPath}}")
        
     public String deletepage() {
         if (${table.propertyName}Form.crudMode != CommonConstants.DELETE_MODE) {
@@ -197,7 +204,7 @@ public class Bs${table.className}Action implements Serializable {
         return "confirm.jsp";
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String deletefromconfirm() {
         ${table.propertyName}Form.crudMode = CommonConstants.DELETE_MODE;
 
@@ -248,7 +255,7 @@ public class Bs${table.className}Action implements Serializable {
         }
     }
 
-    @Execute(validator = false, input = "error.jsp")
+    @Execute(validator = true, input = "error.jsp")
     public String delete() {
         if (${table.propertyName}Form.crudMode != CommonConstants.DELETE_MODE) {
             throw new ActionMessagesException("errors.crud_invalid_mode",
@@ -357,13 +364,17 @@ public class Bs${table.className}Action implements Serializable {
         } else {
             ${table.propertyName} = new ${table.className}();
         }
+        update${table.className}(${table.propertyName});
+
+        return ${table.propertyName};
+    }
+
+    protected void update${table.className}(${table.className} ${table.propertyName}) {
         Beans.copy(${table.propertyName}Form, ${table.propertyName}).excludes("searchParams", "mode")
     
             #if(${table.converterToEntity})${table.converterToEntity}#end##
        
                 .execute();
-
-        return ${table.propertyName};
     }
 
     protected Map<String, String> createKeyMap() {

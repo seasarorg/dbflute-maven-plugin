@@ -94,6 +94,11 @@ public class GenerateCrudPlugin extends AbstractMojo {
     protected File jspDir;
 
     /**
+     * @parameter expression="${dbflute.jspDir}" default-value="${basedir}/src/main/webapp"
+     */
+    protected File webappDir;
+
+    /**
      * @parameter expression="${dbflute.messagePropertyName}" default-value="application"
      */
     protected String messagePropertyName;
@@ -104,7 +109,7 @@ public class GenerateCrudPlugin extends AbstractMojo {
     protected File resourcesDir;
 
     /**
-     * @parameter expression="${dbflute.locales}" default-value="ja"
+     * @parameter expression="${dbflute.locales}" default-value=",ja"
      */
     protected String locales;
 
@@ -152,6 +157,8 @@ public class GenerateCrudPlugin extends AbstractMojo {
     private File basePagerJavaDir;
 
     private File rootJspDir;
+
+    private File rootWebappDir;
 
     private String[] supportedLocales = new String[] { "", "ja" };
 
@@ -221,6 +228,7 @@ public class GenerateCrudPlugin extends AbstractMojo {
         } else {
             rootJspDir = jspDir;
         }
+        rootWebappDir = webappDir;
     }
 
     private String getFileSeparator() {
@@ -308,6 +316,10 @@ public class GenerateCrudPlugin extends AbstractMojo {
 
     public File getRootJspDir() {
         return rootJspDir;
+    }
+
+    public File getRootWebappDir() {
+        return rootWebappDir;
     }
 
     public File getJspDir() {

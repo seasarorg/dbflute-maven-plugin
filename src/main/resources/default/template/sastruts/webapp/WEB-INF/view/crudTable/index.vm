@@ -1,144 +1,219 @@
-<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 
 #set($D = '$')
-     
+     <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %><%--
+--%><!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title></title>
-</head>
-<body>
-<div class="crud-portlet">
+	<head>
+		<meta charset="utf-8">
+		<title><bean:message key="labels.crud_page_title"/></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-<!-- Message: BEGIN -->
-<div><html:messages id="msg" message="true"><bean:write name="msg" ignore="true"/></html:messages><html:errors/></div>
-<!-- Message: END -->
+		<link href="${D}{f:url('/css/bootstrap.css')}" rel="stylesheet">
+		<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+.sidebar-nav {
+	padding: 9px 0;
+}
 
-<!-- Search: BEGIN -->
-<div class="form-table">
-<s:form>
-<table>
-	<tbody>
-		<tr>
-			<td>
-				<table><tbody>
+@media (max-width: 980px) {
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+		</style>
+		<link href="${D}{f:url('/css/bootstrap-responsive.css')}" rel="stylesheet">
+
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+			<script src="${D}{f:url('/js/html5shiv.js')}"></script>
+		<![endif]-->
+	</head>
+
+
+	<body>
+
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<s:link href="../index" styleClass="brand"><bean:message key="labels.crud_brand_name"/></s:link>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span3">
+					<div class="well sidebar-nav">
+						<ul class="nav nav-list">
+							<li class="nav-header"><bean:message key="labels.crud_menu_table"/></li>
 #*
-					<tr>
-						<th>ID:</th>
-						<td><html:text property="searchParams.id"></html:text></td>
-					</tr>
+							<li><s:link href="../${table.propertyName}/index">${table.propertyName}</s:link></li>
 *#
 
-	#foreach( $column in ${table.getColumnList()} )
-		#if(${column.primaryKey})
-					<tr>
-						<th>${column.name}:</th>
-						<td><html:text property="searchParams.${column.propertyName}"></html:text></td>
-					</tr>
-		#end
-	#end
+#foreach( $table in ${database.getTableList()} )
+							<li><s:link href="../${table.propertyName}/index">${table.propertyName}</s:link></li>
+#end
      
+						</ul>
+					</div>
+				</div>
+				<div class="span9">
 
-				</tbody></table>
-			</td>
-			<td>
-				<input type="submit" name="search" value="<bean:message key="labels.crud_button_search"/>"/>
-				<input type="submit" name="reset" value="<bean:message key="labels.crud_button_reset"/>"/>
-			</td>
-		</tr>
-	</tbody>
-</table>
-</s:form>
-</div>
-<!-- Search: END -->
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="#"><bean:message key="labels.crud_link_list"/></a>
+						</li>
+						<li><s:link href="createpage"><bean:message key="labels.crud_link_create_new"/></s:link></li>
+					</ul>
 
-<!-- List: BEGIN -->
-<div class="list-table">
-<div>
-<s:link href="createpage"><bean:message key="labels.crud_link_create_new"/></s:link>
-</div>
-<table border="1">
-	<thead>
-		<tr>
+<%-- Message: BEGIN --%>
+					<html:messages id="msg" message="true"><div class="alert alert-info"><bean:write name="msg" ignore="true"/></div></html:messages>
+					<html:errors/>
+<%-- Message: END --%>
+
+<%-- Search: BEGIN --%>
+					<div class="accordion" id="conditionAccodion">
+						<div class="accordion-group">
+							<div class="accordion-heading">
+								<a class="accordion-toggle" data-toggle="collapse" data-parent="#conditionAccodion" href="#conditionCollapse">
+									<bean:message key="labels.crud_search_condition_title"/>
+								</a>
+							</div>
+							<div id="conditionCollapse" class="accordion-body collapse<c:if test="${D}{${table.propertyName}Pager.hasParams()}"> in</c:if>">
+								<div class="accordion-inner">
+
+									<s:form styleClass="form-horizontal">
 #*
-			<th style="text-align: center;">id</th>
-			<th style="text-align: center;">value</th>
+										<div class="control-group">
+											<label class="control-label" for="idInput">ID</label>
+											<div class="controls">
+												<html:text property="searchParams.id" styleId="idInput"></html:text>
+											</div>
+										</div>
 *#
 
-	#foreach( $column in ${table.getColumnList()} )
-			<th style="text-align: center;">${column.name}</th>
-	#end
+#foreach( $column in ${table.getColumnList()} )
+										<div class="control-group">
+											<label class="control-label" for="${column.name}Input">${column.name}</label>
+											<div class="controls">
+												<html:text property="searchParams.${column.name}" styleId="${column.name}Input"></html:text>
+											</div>
+										</div>
+#end
      
-			<th style="text-align: center;">&nbsp;</th>
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach var="data" varStatus="s" items="${D}{${table.propertyName}Items}">
-		<tr class="${D}{s.index % 2 == 0 ? 'row1' : 'row2'}">
+										<div class="control-group">
+											<div class="controls">
+												<input type="submit" name="search" value="<bean:message key="labels.crud_button_search"/>" class="btn btn-primary"/>
+												<input type="submit" name="reset" value="<bean:message key="labels.crud_button_reset"/>" class="btn"/>
+											</div>
+										</div>
+									</s:form>
 
+								</div>
+							</div>
+						</div>
+					</div>
+<%-- Search: END --%>
+
+<%-- List: BEGIN --%>
+					<div class="text-left" style="height:0;">
+						<span class="label label-info">${D}{${table.propertyName}Pager.currentPageNumber}/${D}{${table.propertyName}Pager.allPageCount}</span>
+					</div>
+					<p class="text-right">
+						<span class="badge badge-info">${D}{${table.propertyName}Pager.allRecordCount}</span>
+					</p>
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
 #*
-			<td><s:link href="confirmpage/4/${D}{f:u(data.id)}">${D}{f:h(data.id)}</s:link></td>
-			<td>${D}{f:h(data.value)}</td>
+								<th>id</th>
+								<th>value</th>
 *#
 
-	#foreach( $column in ${table.getColumnList()} )
-		#if(${column.primaryKey})
-			<td><s:link href="confirmpage/4#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end">${D}{f:h(data.${column.propertyName})}</s:link></td>
-		#else
-			<td>${D}{f:h(data.${column.propertyName})}</td>
-		#end
-	#end
+#foreach( $column in ${table.getColumnList()} )##
+								<th>${column.name}</th>
+#end##
      
-
-			<td align="center">
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+						<c:forEach var="data" varStatus="s" items="${D}{${table.propertyName}Items}">
+							<tr class="${D}{s.index % 2 == 0 ? 'row1' : 'row2'}">
 #*
-				<s:link href="editpage/2/${D}{f:u(data.id)}"><bean:message key="labels.crud_link_edit"/></s:link>
-				<s:link href="deletepage/3/${D}{f:u(data.id)}"><bean:message key="labels.crud_link_delete"/></s:link>
+								<td><s:link href="confirmpage/4/${D}{f:u(data.id)}">${D}{f:h(data.id)}</s:link></td>
+								<td>${D}{f:h(data.value)}</td>
 *#
 
-				<s:link href="editpage/2#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end"><bean:message key="labels.crud_link_edit"/></s:link>
-				<s:link href="deletepage/3#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end"><bean:message key="labels.crud_link_delete"/></s:link>
+#foreach( $column in ${table.getColumnList()} )##
+	#if(${column.primaryKey})##
+								<td><s:link href="confirmpage/4#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end">${D}{f:h(data.${column.propertyName})}</s:link></td>
+	#else##
+								<td>${D}{f:h(data.${column.propertyName})}</td>
+	#end##
+#end##
      
-			</td>
-		</tr>
-		</c:forEach>
-	</tbody>
-</table>
-<!-- Page Navigation: BEGIN -->
-<div>
-	<span>
-		<c:if test="${D}{${table.propertyName}Pager.existPrePage}">
-		<s:link href="list/${D}{${table.propertyName}Pager.currentPageNumber - 1}"><bean:message key="labels.crud_link_prev_page"/></s:link>
-		</c:if>
-	</span>
-	<span>
-		<c:forEach var="p" varStatus="s" items="${D}{${table.propertyName}Pager.pageNumberList}">
-		<span>
-			<c:if test="${D}{p == ${table.propertyName}Pager.currentPageNumber}">
-			${p}
-			</c:if>
-			<c:if test="${D}{p != ${table.propertyName}Pager.currentPageNumber}">
-			<s:link href="list/${p}">${p}</s:link>
-			</c:if>
-		</span>
-		</c:forEach>
-	</span>
-	<span>
-		<c:if test="${D}{${table.propertyName}Pager.existNextPage}">
-		<s:link href="list/${D}{${table.propertyName}Pager.currentPageNumber + 1}"><bean:message key="labels.crud_link_next_page"/></s:link>
-		</c:if>
-	</span>
-</div>
-<div>
-	<span>
-		${D}{${table.propertyName}Pager.currentPageNumber}/${D}{${table.propertyName}Pager.allPageCount} (${D}{${table.propertyName}Pager.allRecordCount})
-	</span>
-</div>
-<!-- Page Navigation: END -->
-</div>
-<!-- List: END -->
+								<td>
+#*
+									<s:link href="editpage/2/${D}{f:u(data.id)}"><bean:message key="labels.crud_link_edit"/></s:link>
+									<s:link href="deletepage/3/${D}{f:u(data.id)}"><bean:message key="labels.crud_link_delete"/></s:link>
+*#
 
-</div>
+									<s:link href="editpage/2#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end"><bean:message key="labels.crud_link_edit"/></s:link>
+									<s:link href="deletepage/3#foreach( $col in ${table.getColumnList()} )#if(${col.primaryKey})/${D}{f:u(data.${col.propertyName})}#end#end"><bean:message key="labels.crud_link_delete"/></s:link>
+     
+								</td>
+							</tr>
+						</c:forEach>
+						</tbody>
+					</table>
+<%-- Page Navigation: BEGIN --%>
+					<div class="pagination pagination-centered">
+						<ul>
+						<c:if test="${D}{${table.propertyName}Pager.existPrePage}">
+							<li>
+								<s:link href="list/${D}{${table.propertyName}Pager.currentPageNumber - 1}"><bean:message key="labels.crud_link_prev_page"/></s:link>
+							</li>
+						</c:if>
+						<c:forEach var="p" varStatus="s" items="${D}{${table.propertyName}Pager.pageNumberList}">
+							<c:if test="${D}{p == ${table.propertyName}Pager.currentPageNumber}">
+							<li class="disabled"><a href="#">${p}</a></li>
+							</c:if>
+							<c:if test="${D}{p != ${table.propertyName}Pager.currentPageNumber}">
+							<li class="active"><s:link href="list/${p}">${p}</s:link></li>
+							</c:if>
+						</c:forEach>
+						<c:if test="${D}{${table.propertyName}Pager.existNextPage}">
+							<li>
+								<s:link href="list/${D}{${table.propertyName}Pager.currentPageNumber + 1}"><bean:message key="labels.crud_link_next_page"/></s:link>
+							</li>
+						</c:if>
+						</ul>
+					</div>
+<%-- Page Navigation: END --%>
+<%-- List: END --%>
 
-</body>
+
+				</div>
+			</div>
+
+			<hr>
+
+			<footer>
+				<p><bean:message key="labels.crud_copyright"/></p>
+			</footer>
+
+		</div>
+
+		<script src="${D}{f:url('/js/jquery.min.js')}"></script>
+		<script src="${D}{f:url('/js/bootstrap.min.js')}"></script>
+
+	</body>
 </html>

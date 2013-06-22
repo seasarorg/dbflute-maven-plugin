@@ -69,12 +69,12 @@ public class ResourceFileUtil {
         return tempDir;
     }
 
-    public static void unzip(InputStream inputStream, File unzipDbfluteDir)
+    public static void unzip(InputStream inputStream, File destDir)
             throws MojoFailureException, MojoExecutionException {
-        unzip(inputStream, unzipDbfluteDir, true);
+        unzip(inputStream, destDir, true);
     }
 
-    public static void unzip(InputStream inputStream, File unzipDbfluteDir,
+    public static void unzip(InputStream inputStream, File destDir,
             boolean overwrite) throws MojoFailureException,
             MojoExecutionException {
 
@@ -89,13 +89,13 @@ public class ResourceFileUtil {
                 if (zipEntry.isDirectory()) {
                     LogUtil.getLog().info("Extracting " + entryName);
 
-                    File targetFile = new File(unzipDbfluteDir + File.separator
+                    File targetFile = new File(destDir + File.separator
                             + entryName);
                     makeDir(targetFile);
                 } else {
                     LogUtil.getLog().info("Extracting " + entryName);
 
-                    File targetFile = new File(unzipDbfluteDir + File.separator
+                    File targetFile = new File(destDir + File.separator
                             + entryName);
                     makeDir(targetFile.getParentFile());
 
@@ -176,4 +176,5 @@ public class ResourceFileUtil {
         IOUtils.closeQuietly(writer);
     }
 
+  
 }

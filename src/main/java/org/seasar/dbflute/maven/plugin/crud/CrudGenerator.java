@@ -43,6 +43,7 @@ import org.apache.velocity.app.Velocity;
 import org.seasar.dbflute.maven.plugin.GenerateCrudPlugin;
 import org.seasar.dbflute.maven.plugin.entity.Database;
 import org.seasar.dbflute.maven.plugin.entity.Table;
+import org.seasar.dbflute.maven.plugin.util.LogUtil;
 import org.seasar.dbflute.maven.plugin.util.ResourceFileUtil;
 import org.seasar.util.io.ResourceUtil;
 
@@ -59,6 +60,8 @@ public class CrudGenerator {
     private static final String TEMPLATE_RESOURCE_PATH = "template/sastruts/resources/";
 
     private static final String TEMPLATE_JSP_PATH = "template/sastruts/webapp/WEB-INF/view/";
+
+    private static final String TEMPLATE_WEBRESOURCE_FILE = "template/sastruts/webresource.zip";
 
     protected File schemaFile;
 
@@ -402,6 +405,25 @@ public class CrudGenerator {
         }
 
         createMessagePropertyFile();
+
+        // web resources
+        InputStream webResourceStream;
+        if (ResourceUtil.isExist(TEMPLATE_WEBRESOURCE_FILE)) {
+            webResourceStream = ResourceUtil
+                    .getResourceAsStreamNoException(TEMPLATE_WEBRESOURCE_FILE);
+        } else {
+            webResourceStream = ResourceUtil
+                    .getResourceAsStreamNoException("default/"
+                            + TEMPLATE_WEBRESOURCE_FILE);
+        }
+        if (webResourceStream != null) {
+            try {
+                ResourceFileUtil.unzip(webResourceStream,
+                        plugin.getRootWebappDir(), false);
+            } finally {
+                IOUtils.closeQuietly(webResourceStream);
+            }
+        }
     }
 
     protected void createMessagePropertyFile() throws MojoFailureException,
@@ -434,6 +456,8 @@ public class CrudGenerator {
             }
 
             File propFile = new File(propDir, propFileName);
+
+            LogUtil.getLog().info("Updating " + propFile.getAbsolutePath());
 
             File tempFile = null;
             BufferedReader br = null;

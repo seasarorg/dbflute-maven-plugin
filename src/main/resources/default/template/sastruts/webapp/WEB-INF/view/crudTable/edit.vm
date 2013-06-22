@@ -1,81 +1,162 @@
-<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 
 #set($D = '$')
-     
+     <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %><%--
+--%><!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title></title>
-</head>
-<body>
-<div class="crud-portlet">
+	<head>
+		<meta charset="utf-8">
+		<title><bean:message key="labels.crud_page_title"/></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-<!-- Message: BEGIN -->
-<div><html:messages id="msg" message="true"><bean:write name="msg" ignore="true"/></html:messages><html:errors/></div>
-<!-- Message: END -->
+		<link href="${D}{f:url('/css/bootstrap.css')}" rel="stylesheet">
+		<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+.sidebar-nav {
+	padding: 9px 0;
+}
+.control-value {
+	float:left;
+	padding-top:5px;
+}
 
-<!-- Edit Form: BEGIN -->
-    <s:form>
-        <html:hidden property="crudMode"/>
-        <div class="form-table">
-		<table>
-            <caption><bean:message key="labels.crud_title_details"/></caption>
-            <tbody>
+@media (max-width: 980px) {
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+		</style>
+		<link href="${D}{f:url('/css/bootstrap-responsive.css')}" rel="stylesheet">
 
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+			<script src="${D}{f:url('/js/html5shiv.js')}"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<s:link href="../index" styleClass="brand"><bean:message key="labels.crud_brand_name"/></s:link>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span3">
+					<div class="well sidebar-nav">
+						<ul class="nav nav-list">
+							<li class="nav-header"><bean:message key="labels.crud_menu_table"/></li>
 #*
-<!-- Primary: BEGIN -->
-<c:if test="${D}{crudMode==2}">
-                <tr>
-                    <th>id</th>
-                    <td>${D}{f:h(id)}<html:hidden property="id"/></td>
-                </tr>
-</c:if>
-<!-- Primary: END -->
-                <tr>
-                    <th>value</th>
-                    <td><html:text property="value"/></td>
-                </tr>
+							<li><s:link href="../${table.propertyName}/index">${table.propertyName}</s:link></li>
 *#
 
-	#foreach( $column in ${table.getColumnList()} )
-		#if(${column.primaryKey})
+#foreach( $table in ${database.getTableList()} )
+							<li><s:link href="../${table.propertyName}/index">${table.propertyName}</s:link></li>
+#end
+     
+						</ul>
+					</div>
+				</div>
+				<div class="span9">
+
+					<ul class="nav nav-tabs">
+						<li><s:link href="index"><bean:message key="labels.crud_link_list"/></s:link></li>
+						<li class="active">
+						<c:if test="${D}{crudMode==1}">
+							<a href="#"><bean:message key="labels.crud_link_create_new"/></a>
+						</c:if>
+						<c:if test="${D}{crudMode==2}">
+							<a href="#"><bean:message key="labels.crud_link_edit"/></a>
+						</c:if>
+						</li>
+					</ul>
+
+<%-- Message: BEGIN --%>
+					<html:messages id="msg" message="true"><div class="alert alert-info"><bean:write name="msg" ignore="true"/></div></html:messages>
+					<html:errors/>
+<%-- Message: END --%>
+
+<%-- Edit Form: BEGIN --%>
+					<s:form styleClass="form-horizontal">
+						<html:hidden property="crudMode"/>
+#*
+<%-- Primary: BEGIN --%>
 <c:if test="${D}{crudMode==2}">
-                <tr>
-                    <th>${column.name}</th>
-                    <td>${D}{f:h(${column.propertyName})}<html:hidden property="${column.propertyName}"/></td>
-                </tr>
+						<div class="control-group">
+							<label class="control-label" for="idInput">id</label>
+							<div class="controls">
+								<span class="control-value">${D}{f:h(id)}</span>
+							</div>
+						</div>
+						<html:hidden property="id" styleId="idInput"/>
 </c:if>
-		#else
-                <tr>
-                    <th>${column.name}</th>
-                    <td><html:text property="${column.propertyName}"/></td>
-                </tr>
-		#end
-	#end
+<%-- Primary: END --%>
+						<div class="control-group">
+							<label class="control-label" for="valueInput">value</label>
+							<div class="controls">
+								<html:text property="value" styleId="valueInput"/>
+							</div>
+						</div>
+*#
+
+#foreach( $column in ${table.getColumnList()} )##
+	#if(${column.primaryKey})##
+<c:if test="${D}{crudMode==2}">
+						<div class="control-group">
+							<label class="control-label" for="${column.propertyName}Input">${column.name}</label>
+							<div class="controls">
+								<span class="control-value">${D}{f:h(${column.propertyName})}</span>
+							</div>
+						</div>
+						<html:hidden property="${column.propertyName}" styleId="${column.propertyName}Input"/>
+</c:if>
+	#else##
+						<div class="control-group">
+							<label class="control-label" for="${column.propertyName}Input">${column.name}</label>
+							<div class="controls">
+								<html:text property="${column.propertyName}" styleId="${column.propertyName}Input"/>
+							</div>
+						</div>
+	#end##
+#end##
      
 
+						<div class="form-actions">
+							<c:if test="${D}{crudMode == 1}">
+								<input type="submit" name="confirmfromcreate" value="<bean:message key="labels.crud_button_create"/>" class="btn btn-primary"/>
+								<input type="submit" name="back" value="<bean:message key="labels.crud_button_back"/>" class="btn"/>
+							</c:if>
+							<c:if test="${D}{crudMode == 2}">
+								<input type="submit" name="confirmfromupdate" value="<bean:message key="labels.crud_button_confirm"/>" class="btn btn-primary"/>
+								<input type="submit" name="back" value="<bean:message key="labels.crud_button_back"/>" class="btn"/>
+							</c:if>
+						</div>
+					</s:form>
+<%-- Edit Form: BEGIN --%>
 
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2">
-        <c:if test="${D}{crudMode == 1}">
-            <input type="submit" name="confirmfromcreate" value="<bean:message key="labels.crud_button_create"/>"/>
-            <input type="submit" name="back" value="<bean:message key="labels.crud_button_back"/>"/>
-        </c:if>
-        <c:if test="${D}{crudMode == 2}">
-            <input type="submit" name="confirmfromupdate" value="<bean:message key="labels.crud_button_confirm"/>"/>
-            <input type="submit" name="back" value="<bean:message key="labels.crud_button_back"/>"/>
-        </c:if>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+				</div>
+			</div>
+
+			<hr>
+
+			<footer>
+				<p><bean:message key="labels.crud_copyright"/></p>
+			</footer>
+
 		</div>
-    </s:form>
-<!-- Edit Form: BEGIN -->
 
-</div>
+		<script src="${D}{f:url('/js/jquery.min.js')}"></script>
+		<script src="${D}{f:url('/js/bootstrap.min.js')}"></script>
 
-</body>
+	</body>
 </html>

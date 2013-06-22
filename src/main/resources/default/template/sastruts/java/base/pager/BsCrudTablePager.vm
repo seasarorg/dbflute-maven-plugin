@@ -3,6 +3,8 @@ package ${crudContext.basePagerPackage};
 import java.io.Serializable;
 import java.util.List;
 
+import org.seasar.framework.util.StringUtil;
+
 public abstract class Bs${table.className}Pager implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -52,6 +54,21 @@ public abstract class Bs${table.className}Pager implements Serializable {
         #end
         #end
            
+    }
+
+    public boolean hasParams() {
+        #*
+        if(StringUtil.isNotBlank(id)){return true;}
+        *#
+
+        
+        #foreach( $column in ${table.getColumnList()} )
+        #if(${column.required})
+        if(StringUtil.isNotBlank(${column.propertyName})){return true;}
+        #end
+        #end
+           
+        return false;
     }
 
     protected int getDefaultPageSize() {
