@@ -438,7 +438,8 @@ public class CrudGenerator {
         for (String localeStr : plugin.getSupportedLocales()) {
             String propFileName = null;
             String basePropFileName = null;
-            if (StringUtils.isEmpty(localeStr)) {
+            if (StringUtils.isEmpty(localeStr)
+                    || "DEFAULT".equalsIgnoreCase(localeStr)) {
                 propFileName = propName + ".properties";
                 basePropFileName = "application.properties";
             } else {

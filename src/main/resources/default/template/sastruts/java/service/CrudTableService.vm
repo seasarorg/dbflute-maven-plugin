@@ -20,7 +20,34 @@ public class ${table.className}Service extends Bs${table.className}Service imple
         // setup condition
 
         // search
+        #*
+        if (${table.propertyName}Pager.value != null) {
+            cb.query().setValue_Equal(${table.propertyName}Pager.value);
+        }
+        *#
 
+        
+        #foreach( $column in ${table.getColumnList()} )
+        #if(!${column.primaryKey})
+        #if(${column.javaType} == "Long")
+        if (${table.propertyName}Pager.${column.propertyName} != null) {
+            cb.query().set${column.methodName}_Equal(Long.parseLong(${table.propertyName}Pager.${column.propertyName}));
+        }
+        #end
+        #if(${column.javaType} == "Integer")
+        if (${table.propertyName}Pager.${column.propertyName} != null) {
+            cb.query().set${column.methodName}_Equal(Integer.parseInt(${table.propertyName}Pager.${column.propertyName}));
+        }
+        #end
+        #if(${column.javaType} == "String")
+        if (${table.propertyName}Pager.${column.propertyName} != null) {
+            cb.query().set${column.methodName}_Equal(${table.propertyName}Pager.${column.propertyName});
+        }
+        #end
+        #end
+        #end
+        // TODO Long, Integer, String supported only.
+           
     }
 
     protected void setupEntityCondition(${table.className}CB cb, Map<String, String> keys) {

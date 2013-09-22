@@ -28,7 +28,8 @@ public abstract class Bs${table.className}Pager implements Serializable {
 
     #*
     public String id;
-
+    
+    public String value;
     *#
 
     
