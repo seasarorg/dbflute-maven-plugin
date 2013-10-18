@@ -101,9 +101,9 @@ body {
 
 #foreach( $column in ${table.getColumnList()} )
 										<div class="control-group">
-											<label class="control-label" for="${column.name}Input">${column.name}</label>
+											<label class="control-label" for="${column.propertyName}Input">${column.name}</label>
 											<div class="controls">
-												<html:text property="searchParams.${column.name}" styleId="${column.name}Input"></html:text>
+												<html:text property="searchParams.${column.propertyName}" styleId="${column.propertyName}Input"></html:text>
 											</div>
 										</div>
 #end
