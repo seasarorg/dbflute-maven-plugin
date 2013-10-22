@@ -6,7 +6,7 @@
   <packaging>maven-plugin</packaging>
   <name>DBFlute Maven Plugin</name>
   <description>Maven Plugin of DBFlute</description>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <url>http://dbflute.seasar.org/maven/plugin/</url>
   <inceptionYear>2006</inceptionYear>
   <licenses>
@@ -40,9 +40,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/dbflute/trunk/dbflute-maven-plugin/</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/dbflute/trunk/dbflute-maven-plugin/</developerConnection>
-    <url>http://www.seasar.org/source/browse/dbflute/</url>
+    <connection>scm:git:git@github.com:seasarorg/dbflute-maven-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:seasarorg/dbflute-maven-plugin.git</developerConnection>
+    <url>git@github.com:seasarorg/dbflute-maven-plugin.git</url>
   </scm>
   <build>
     <pluginManagement>
